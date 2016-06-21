@@ -11,5 +11,8 @@ import Foundation
 class DataManager {
     static let sharedInstance = DataManager()
     var isUser = false
+    var oneSignal : OneSignal?
+    var onseSignalId : String?
+    var influencerName = "Alex Ramos"
     
 }

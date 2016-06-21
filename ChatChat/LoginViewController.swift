@@ -41,13 +41,22 @@ class LoginViewController: UIViewController {
 
 
   @IBAction func loginDidTouch(sender: AnyObject) {
-   FIRAuth.auth()?.signInAnonymouslyWithCompletion() { user, error in
+//    do {
+//        try FIRAuth.auth()?.signOut()
+//    } catch _ {
+//        print("failed")
+//    }
+    FIRAuth.auth()?.signInAnonymouslyWithCompletion() { user, error in
         if error != nil {
             print(error)
 
         } else {
             print("Logged in")
+            
             self.fUser = user
+            
+            self.uploadPushNotificationData()
+
             if self.dataManager.isUser {
                 self.performSegueWithIdentifier("LoginSegueForUser", sender: nil) // 3
             } else {
@@ -66,5 +75,17 @@ class LoginViewController: UIViewController {
             chatVc.senderDisplayName = "Test" // 4*/
         }
     }
+    func uploadPushNotificationData() {
+        let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
+        let pushIdRef = rootReference.child("PushIds")
+        let userPushIdRef = pushIdRef.child(fUser.uid)
+        let pushItem : NSDictionary  = [
+            "pushId": dataManager.onseSignalId!
+        ]
+        userPushIdRef.setValue(pushItem)
+        
+    }
+
+
 }
 

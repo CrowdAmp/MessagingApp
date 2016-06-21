@@ -26,9 +26,6 @@ class ImageDisplayViewController: UIViewController {
             attribute: NSLayoutAttribute.Width,
             multiplier: image.size.height / image.size.width,
             constant: 0))
-        
- 
-
     }
 
 

@@ -13,7 +13,7 @@ import FirebaseDatabase
 
 class MessageTableViewController: UITableViewController {
 
-    let rootReference = FIRDatabase.database().referenceFromURL("https://project-5770689541369228207.firebaseio.com/")
+    let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com")
     var conversationIdArray : [String] = []
     var conversationIndex = 0
     
@@ -54,7 +54,7 @@ class MessageTableViewController: UITableViewController {
     
 
     private func conversationQuery() {
-        let ref = rootReference
+        let ref = rootReference.child("MessageData")
         let query = ref.queryLimitedToLast(500)
         query.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
             print(snapshot.key)

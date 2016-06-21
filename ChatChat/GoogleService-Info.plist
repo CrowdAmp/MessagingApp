@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>1030903303307-0foduh19if1k837hb7j24vbska8hgi38.apps.googleusercontent.com</string>
+	<string>417228801167-gpfljh9op33fr91sb8ovbrinuv11maae.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1030903303307-0foduh19if1k837hb7j24vbska8hgi38</string>
+	<string>com.googleusercontent.apps.417228801167-gpfljh9op33fr91sb8ovbrinuv11maae</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDVkuSj1_JxYT6ITjSOr2Albq7i1yAcNeY</string>
+	<string>AIzaSyDGSz1x7ZWPeMU_SmkgMf4MbCjcj-WhdDQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1030903303307</string>
+	<string>417228801167</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.crowdamp.messaging</string>
+	<string>com.rubenmayer.crowdampmessaging</string>
 	<key>PROJECT_ID</key>
-	<string>project-5770689541369228207</string>
+	<string>crowdamp-messaging</string>
 	<key>STORAGE_BUCKET</key>
-	<string>project-5770689541369228207.appspot.com</string>
+	<string>crowdamp-messaging.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1030903303307:ios:f86f839c0d9a1fbb</string>
+	<string>1:417228801167:ios:52c22336a255d070</string>
 	<key>DATABASE_URL</key>
-	<string>https://project-5770689541369228207.firebaseio.com</string>
+	<string>https://crowdamp-messaging.firebaseio.com</string>
 </dict>
 </plist>

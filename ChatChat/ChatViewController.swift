@@ -35,7 +35,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     var messages = [JSQMessage]()
     var outgoingBubbleImageView: JSQMessagesBubbleImage!
     var incomingBubbleImageView: JSQMessagesBubbleImage!
-    let rootReference = FIRDatabase.database().referenceFromURL("https://project-5770689541369228207.firebaseio.com/")
+    let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
     var messageReference: FIRDatabaseReference!
     var referenceName = ""
     let dataManager = DataManager.sharedInstance
@@ -49,6 +49,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     let refreshControl = UIRefreshControl()
     let messagesDisplayed : UInt = 2
     let messagesLoaded : UInt = 2
+    var pushId : String!
 
     
     @IBOutlet weak var imageBackgroundView: UIView!
@@ -56,13 +57,16 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+               downloadNotificationId()
+        automaticallyScrollsToMostRecentMessage = false
         referenceName = senderId
         title = "ChatChat"
         setupBubbles()
         // No avatars
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
-        messageReference = rootReference.child(referenceName)
+        let messagesParentRef = rootReference.child("MessageData")
+        messageReference = messagesParentRef.child(referenceName)
         observeMessages(messagesDisplayed)
         if let msgs = defaults.objectForKey("messages" + senderId) as? NSData {
             messages = NSKeyedUnarchiver.unarchiveObjectWithData(msgs) as! [JSQMessage]
@@ -77,8 +81,10 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         collectionView.addSubview(refreshControl) // no
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        navigationController?.navigationBarHidden = false
+
 
     }
 
@@ -168,7 +174,9 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             let mediaItem = message.media
             if mediaItem.isKindOfClass(JSQPhotoMediaItem) {
                 let photoItem = mediaItem as! JSQPhotoMediaItem
-                popupImage(photoItem.image)
+                if let image : UIImage = photoItem.image {
+                    popupImage(image)
+                }
             }
         }
     }
@@ -186,10 +194,11 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!,
                                      senderDisplayName: String!, date: NSDate!) {
        
-        finishReceivingMessage()
+        finishSendingMessage()
+        scrollToBottomAnimated(true)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
-        let itemRef = messageReference.childByAutoId() // 1
-        let messageItem = [ // 2
+        let itemRef = messageReference.childByAutoId()
+        let messageItem = [
             "text": text,
             "senderId": senderId,
             "sentByUser": dataManager.isUser,
@@ -197,10 +206,19 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             "fileName": ""
         ]
         itemRef.setValue(messageItem)
+        sendPushNotificationToCounterpart(dataManager.influencerName + ": " + text)
     }
     
     private func observeMessages(totalMessages: UInt) {
-        let messagesQuery = messageReference.queryLimitedToLast(totalMessages)
+        
+
+        
+        var messagesQuery = messageReference.queryLimitedToLast(totalMessages)
+        if messageKeyArray.count > 0 {
+            messagesQuery = messageReference.queryOrderedByKey().queryStartingAtValue(messageKeyArray[messageKeyArray.count - 1])
+        }
+        
+        
         messagesQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
             let id = snapshot.value!["senderId"] as! String
             let text = snapshot.value!["text"] as! String
@@ -216,19 +234,54 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 self.sendImageMessage(nil, shouldUploadToFirebase: false, title: fileName, sentByUser: sentByUser, messageKey: snapshot.key, insertAtIndex:  -1)
                 }
             }
-            self.finishReceivingMessage()
+            self.finishSendingMessage()
+            self.scrollToBottomAnimated(true)
         }
     }
     
     override func didPressAccessoryButton(sender: UIButton!) {
-        openPhotoLibrary()
+        
+        let alertController = UIAlertController(title: title, message: nil, preferredStyle: .ActionSheet)
+            
+        let selectPhotoFromLibraryAction = UIAlertAction(title: "Select Photo From Library", style: .Default){ (action) in
+            self.openPhotoLibrary()
+        }
+        alertController.addAction(selectPhotoFromLibraryAction)
+        
+        let sendNewPhotoAction = UIAlertAction(title: "Send New Photo", style: .Default) { (action) in
+            self.openCamera()
+        }
+        alertController.addAction(sendNewPhotoAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+            print("didCancelAttachment")
+        }
+        
+        alertController.addAction(cancelAction)
+
+        self.presentViewController(alertController, animated: true) {
+            // ...
+        }
+        self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
     }
+   
+    func openCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
+            imagePicker.allowsEditing = false
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
     
     func openPhotoLibrary() {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+  
             imagePicker.allowsEditing = false
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }
@@ -297,7 +350,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     func storeImageOnFirebase(image: UIImage, fileName: String, mediaType: String) {
         let storage = FIRStorage.storage()
-        let storageRef = storage.referenceForURL("gs://project-5770689541369228207.appspot.com")
+        let storageRef = storage.referenceForURL("gs://crowdamp-messaging.appspot.com")
         let data : NSData = UIImagePNGRepresentation(image)!
         let mediaRef = storageRef.child(fileName)
         let metadata = FIRStorageMetadata()
@@ -315,7 +368,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     func downloadMediaFromFirebase(path : String, type: String, index : Int, sentByUser: Bool) {
         let storage = FIRStorage.storage()
-        let storageRef = storage.referenceForURL("gs://project-5770689541369228207.appspot.com")
+        let storageRef = storage.referenceForURL("gs://crowdamp-messaging.appspot.com")
         let mediaRef = storageRef.child(path)
         mediaRef.dataWithMaxSize(100 * 1024 * 1024) { (data, error) -> Void in
             if (error != nil) {
@@ -350,6 +403,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
             defaults.setObject(data, forKey: "messages" + senderId)
             finishReceivingMessage()
+            self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
             displayedMedia.insert(fileName)
         }
     }
@@ -392,8 +446,11 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 }
                 counter += 1
                 self.refreshControl.endRefreshing()
-                self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
-
+                do {
+                try self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
+                } catch _  {
+                    print("scrolling error")
+                }
 
             }
         self.refreshControl.endRefreshing()
@@ -411,6 +468,25 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
 
     }
     
+    func downloadNotificationId() {
+        if !dataManager.isUser {
+            let pushIdRef = rootReference.child("PushIds").child(senderId)
+            print(senderId)
+            let pushIdQuery = pushIdRef.queryLimitedToLast(1)
+            pushIdQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
+                print(snapshot.value)
+                self.pushId = snapshot.value! as! String
+            }
+        }
+    }
+
+    func sendPushNotificationToCounterpart(notificationContent: String) {
+        if let id : String = pushId {
+         dataManager.oneSignal!.postNotification(["contents": ["en": notificationContent], "include_player_ids": [id]])
+        } else {
+            downloadNotificationId()
+        }
+    }
 }
 
 extension String {
@@ -453,8 +529,5 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return result
     }
-    
-
-
 
 }
