@@ -1,24 +1,24 @@
 /*
-* Copyright (c) 2015 Razeware LLC
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-*/
+ * Copyright (c) 2015 Razeware LLC
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import UIKit
 import JSQMessagesViewController
@@ -45,19 +45,24 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     var imageToDisplay : UIImage!
     let defaults = NSUserDefaults()
     var messageKeyArray : [String] = []
-    let cacheLength = 2
+    let cacheLength = 15
     let refreshControl = UIRefreshControl()
-    let messagesDisplayed : UInt = 2
-    let messagesLoaded : UInt = 2
+    let messagesDisplayed : UInt = 15
+    let messagesLoaded : UInt = 10
     var pushId : String!
+    var messageCount = 0
+    var displayImageSegueIdentifier = "DisplayImage"
+    var firebaseContainerRefferenceName = "IndividualMessageData"
 
+    
     
     @IBOutlet weak var imageBackgroundView: UIView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-               downloadNotificationId()
+        firebaseContainerRefferenceName = dataManager.influencerId + "/" + firebaseContainerRefferenceName
+        downloadNotificationId()
         automaticallyScrollsToMostRecentMessage = false
         referenceName = senderId
         title = "ChatChat"
@@ -65,7 +70,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         // No avatars
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
-        let messagesParentRef = rootReference.child("MessageData")
+        let messagesParentRef = rootReference.child(firebaseContainerRefferenceName)
         messageReference = messagesParentRef.child(referenceName)
         observeMessages(messagesDisplayed)
         if let msgs = defaults.objectForKey("messages" + senderId) as? NSData {
@@ -81,19 +86,41 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         collectionView.addSubview(refreshControl) // no
     }
     
+    //    func getMessageCount() {
+    //        let ref = rootReference.child("MessagesCount/" + senderId)
+    //        let query = ref.queryLimitedToLast(1)
+    //        query.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
+    //            self.messageCount = snapshot.value! as! Int
+    //        }
+    //        query.observeEventType(.ChildChanged) { (snapshot: FIRDataSnapshot!) in
+    //            self.messageCount = snapshot.value! as! Int
+    //        }
+    //    }
+    //
+    //    func updateMessageCount() {
+    //
+    //        let ref = rootReference.child("MessagesCount/" + senderId)
+    //        messageCount += 1
+    //        let countItem : NSDictionary = [
+    //            "count": messageCount
+    //        ]
+    //        ref.setValue(countItem)
+    //    }
+    
+    
     override func viewWillAppear(animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.navigationBarHidden = false
-
-
+        
+        
     }
-
-  
+    
+    
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-
+        
     }
-  
+    
     override func collectionView(collectionView: JSQMessagesCollectionView!,
                                  messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
         return messages[indexPath.item]
@@ -138,7 +165,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             if insertAtIndex != -1 {
                 messages.insert(message, atIndex: insertAtIndex)
                 messageKeyArray.insert(key, atIndex: insertAtIndex)
-
+                
             } else {
                 messages.append(message)
                 messageKeyArray.append(key)
@@ -146,7 +173,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
             defaults.setObject(data, forKey: "messages" + senderId)
             defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
-
+            
             
         }
     }
@@ -183,7 +210,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     func popupImage(image: UIImage) {
         imageToDisplay = image
-        self.performSegueWithIdentifier("DisplayImage", sender: self)
+        self.performSegueWithIdentifier(displayImageSegueIdentifier, sender: self)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -193,26 +220,35 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!,
                                      senderDisplayName: String!, date: NSDate!) {
-       
+        
         finishSendingMessage()
         scrollToBottomAnimated(true)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
-        let itemRef = messageReference.childByAutoId()
+        let itemRef = messageReference.childByAutoId()//(String(messageCount))
         let messageItem = [
             "text": text,
             "senderId": senderId,
             "sentByUser": dataManager.isUser,
             "type": "text",
-            "fileName": ""
+            "fileName": "",
+            "hasBeenForwarded": false,
+            "mediaDownloadUrl": ""
         ]
-        itemRef.setValue(messageItem)
+        itemRef.setValue(messageItem, withCompletionBlock: { (error, refference) in
+            if (error == nil) {
+
+            } else {
+                print(error)
+            }
+            
+        })
+        addTimestampToMessageData()
+        itemRef.child("timestamp").setValue(FIRServerValue.timestamp())
         sendPushNotificationToCounterpart(dataManager.influencerName + ": " + text)
     }
     
     private func observeMessages(totalMessages: UInt) {
-        
 
-        
         var messagesQuery = messageReference.queryLimitedToLast(totalMessages)
         if messageKeyArray.count > 0 {
             messagesQuery = messageReference.queryOrderedByKey().queryStartingAtValue(messageKeyArray[messageKeyArray.count - 1])
@@ -220,29 +256,34 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         
         
         messagesQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
-            let id = snapshot.value!["senderId"] as! String
-            let text = snapshot.value!["text"] as! String
-            let sentByUser = snapshot.value!["sentByUser"] as! Bool
-            let type = snapshot.value!["type"] as! String
-            let fileName = snapshot.value!["fileName"] as! String
+            let id = snapshot.value?["senderId"] as? String
+            let text = snapshot.value?["text"] as? String
+            let sentByUser = snapshot.value?["sentByUser"] as? Bool
+            let type = snapshot.value!["type"] as? String
+            let fileName = snapshot.value?["fileName"] as? String
             
-            if type == "text" {
-                self.addMessage(id, text: text, sentByUser: sentByUser, key: snapshot.key, insertAtIndex: -1)
-            } else if type == "image" {
-                if !self.messageKeyArray.contains(snapshot.key) {
-                self.downloadMediaFromFirebase(fileName, type: type, index: self.messages.count, sentByUser: sentByUser)
-                self.sendImageMessage(nil, shouldUploadToFirebase: false, title: fileName, sentByUser: sentByUser, messageKey: snapshot.key, insertAtIndex:  -1)
+            if id != nil && text != nil && sentByUser != nil && type != nil && fileName != nil {
+                
+                if type == "text" {
+                    self.addMessage(id!, text: text!, sentByUser: sentByUser!, key: snapshot.key, insertAtIndex: -1)
+                } else if type == "image" {
+                    if !self.messageKeyArray.contains(snapshot.key) {
+                        self.downloadMediaFromFirebase(fileName!, type: type!, index: self.messages.count, sentByUser: sentByUser!)
+                        self.sendImageMessage(nil, shouldUploadToFirebase: false, title: fileName!, sentByUser: sentByUser!, messageKey: snapshot.key, insertAtIndex:  -1)
+                    }
                 }
+                //}
             }
-            self.finishSendingMessage()
+            self.finishReceivingMessage()
             self.scrollToBottomAnimated(true)
         }
     }
     
     override func didPressAccessoryButton(sender: UIButton!) {
         
+        self.scrollToBottomAnimated(true)
         let alertController = UIAlertController(title: title, message: nil, preferredStyle: .ActionSheet)
-            
+        
         let selectPhotoFromLibraryAction = UIAlertAction(title: "Select Photo From Library", style: .Default){ (action) in
             self.openPhotoLibrary()
         }
@@ -258,13 +299,13 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
         
         alertController.addAction(cancelAction)
-
+        
         self.presentViewController(alertController, animated: true) {
             // ...
         }
-        self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
+        
     }
-   
+    
     func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             let imagePicker = UIImagePickerController()
@@ -281,7 +322,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
-  
+            
             imagePicker.allowsEditing = false
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }
@@ -292,10 +333,10 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         let resizedImage = image.resizeWithWidth(400)
         self.dismissViewControllerAnimated(true, completion: nil);
         //imagePicked.image = image
-        let fileName = "image/" + senderId + String.random()
+        let fileName = "image/" + senderId + String.random() + ".jpg"
         sendImageMessage(resizedImage, shouldUploadToFirebase: true, title: fileName, sentByUser: dataManager.isUser, messageKey: nil, insertAtIndex: -1)
     }
-
+    
     func sendImageMessage(image: UIImage?, shouldUploadToFirebase: Bool, title: String, sentByUser: Bool, messageKey: String?, insertAtIndex: Int) {
         if messageKey == nil || !messageKeyArray.contains(messageKey!) {
             if !displayedMedia.contains(title) {
@@ -311,7 +352,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                     media.appliesMediaViewMaskAsOutgoing = false
                     imageMessage = JSQMessage(senderId: "notUser", displayName: "", media: media)
                 }
-            
+                
                 if (insertAtIndex != -1) {
                     messages.insert(imageMessage, atIndex: insertAtIndex)
                     if let mk: String = messageKey {
@@ -333,16 +374,20 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
-    func addMediaMessageData(type: String, fileName: String) {
-        let itemRef = messageReference.childByAutoId() // 1
+    func addMediaMessageData(type: String, fileName: String, downloadUrl: String) {
+        let itemRef = messageReference.childByAutoId()//(String(messageCount)) // 1
         let messageItem = [ // 2
             "text": "",
             "senderId": senderId,
             "sentByUser": dataManager.isUser,
             "type": type,
-            "fileName": fileName
+            "fileName": fileName,
+            "hasBeenForwarded": false,
+            "mediaDownloadUrl": downloadUrl
         ]
         itemRef.setValue(messageItem)
+        itemRef.child("timestamp").setValue(FIRServerValue.timestamp())
+        addTimestampToMessageData()
         messageKeyArray.append(itemRef.key)
         defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
@@ -351,17 +396,18 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     func storeImageOnFirebase(image: UIImage, fileName: String, mediaType: String) {
         let storage = FIRStorage.storage()
         let storageRef = storage.referenceForURL("gs://crowdamp-messaging.appspot.com")
-        let data : NSData = UIImagePNGRepresentation(image)!
+        let data : NSData = UIImageJPEGRepresentation(image, 1)!
         let mediaRef = storageRef.child(fileName)
         let metadata = FIRStorageMetadata()
-        metadata.contentType = mediaType
+        metadata.contentType = "image/jpeg"
         
-        let uploadTask = mediaRef.putData(data, metadata: metadata) { metadata, error in
+        let _ = mediaRef.putData(data, metadata: metadata) { metadata, error in
             if (error != nil) {
                 print(error)
             } else {
                 // Metadata contains file metadata such as size, content-type, and download URL.
-                self.addMediaMessageData("image", fileName: fileName)
+                self.addMediaMessageData("image", fileName: fileName, downloadUrl: metadata!.downloadURL()!.absoluteString)
+                
             }
         }
     }
@@ -394,7 +440,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 media.appliesMediaViewMaskAsOutgoing = false
                 imageMessage = JSQMessage(senderId: "notUser", displayName: "", media: media)
             }
-
+            
             if index >= messages.count {
                 messages.append(imageMessage)
             } else {
@@ -403,56 +449,51 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
             defaults.setObject(data, forKey: "messages" + senderId)
             finishReceivingMessage()
-            self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
+            //            if messages.count > 3 {
+            //                self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
+            //            }
             displayedMedia.insert(fileName)
         }
     }
     
     func loadMoreMessages() {
         print("id:")
-        print(messageKeyArray[0])
-        var didDisplayProgressHud = false
         let messagesQuery = messageReference.queryOrderedByKey().queryEndingAtValue(messageKeyArray[0]).queryLimitedToLast(messagesLoaded + 1)
         var counter : UInt = 0
-            messagesQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
-                self.refreshControl.beginRefreshing()
-                if(!didDisplayProgressHud) {
-                   // self.displayProgressHud("Loading")
-                    didDisplayProgressHud = true
-                }
-                print("didReceiveQuery \(snapshot)")
-                let id = snapshot.value!["senderId"] as! String
-                let text = snapshot.value!["text"] as! String
-                let sentByUser = snapshot.value!["sentByUser"] as! Bool
-                let type = snapshot.value!["type"] as! String
-                let fileName = snapshot.value!["fileName"] as! String
-                
+        messagesQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
+            self.refreshControl.beginRefreshing()
+
+            
+            print("didReceiveQuery \(snapshot)")
+            let id = snapshot.value?["senderId"] as? String
+            let text = snapshot.value?["text"] as? String
+            let sentByUser = snapshot.value?["sentByUser"] as? Bool
+            let type = snapshot.value?["type"] as? String
+            let fileName = snapshot.value?["fileName"] as? String
+            
+            if  id != nil && text != nil && sentByUser != nil && type != nil && fileName != nil {
                 if counter < self.messagesLoaded {
                     print(counter)
                     if type == "text" {
-                        self.addMessage(id, text: text, sentByUser: sentByUser, key: snapshot.key, insertAtIndex: Int(counter))
+                        self.addMessage(id!, text: text!, sentByUser: sentByUser!, key: snapshot.key, insertAtIndex: Int(counter))
                     } else if type == "image" {
                         if !self.messageKeyArray.contains(snapshot.key) {
-                            self.downloadMediaFromFirebase(fileName, type: type, index: Int(counter), sentByUser: sentByUser)
-                            self.sendImageMessage(nil, shouldUploadToFirebase: false, title: fileName, sentByUser: sentByUser, messageKey: snapshot.key, insertAtIndex: Int(counter))
+                            self.downloadMediaFromFirebase(fileName!, type: type!, index: Int(counter), sentByUser: sentByUser!)
+                            self.sendImageMessage(nil, shouldUploadToFirebase: false, title: fileName!, sentByUser: sentByUser!, messageKey: snapshot.key, insertAtIndex: Int(counter))
                         }
                     }
                     self.finishReceivingMessage()
-
-
-                } else {
-                    //self.removeProgressHuds()
-                                        didDisplayProgressHud = false
+                    
+                    
                 }
-                counter += 1
-                self.refreshControl.endRefreshing()
-                do {
-                try self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
-                } catch _  {
-                    print("scrolling error")
-                }
-
             }
+            counter += 1
+            self.refreshControl.endRefreshing()
+            //                if self.messages.count > 3 {
+            //                    self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
+            //                }
+            
+        }
         self.refreshControl.endRefreshing()
         print("ShouldLoadMoreMessages")
     }
@@ -465,7 +506,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     func removeProgressHuds () {
         MBProgressHUD.hideAllHUDsForView(self.view.window, animated: true)
-
+        
     }
     
     func downloadNotificationId() {
@@ -479,14 +520,42 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             }
         }
     }
-
+    
     func sendPushNotificationToCounterpart(notificationContent: String) {
         if let id : String = pushId {
-         dataManager.oneSignal!.postNotification(["contents": ["en": notificationContent], "include_player_ids": [id]])
+            if let oneSig : OneSignal = dataManager.oneSignal {
+                oneSig.postNotification(["contents": ["en": notificationContent], "include_player_ids": [id]])
+            }
         } else {
             downloadNotificationId()
         }
     }
+    
+    func addTimestampToMessageData() {
+        let ref = rootReference.child(firebaseContainerRefferenceName + "/" + senderId + "/timestamp")
+        ref.setValue(FIRServerValue.timestamp())
+        print(FIRServerValue.timestamp())
+        
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellBottomLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+        if indexPath.item == messages.count - 1 {
+            return NSAttributedString(string: "Delivered")
+        } else {
+            return nil
+        }
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellBottomLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+        if (indexPath.item == messages.count - 1) {
+            return 20.0
+        } else {
+            return 0
+        }
+    }
+    
+    
+    
 }
 
 extension String {
@@ -529,5 +598,5 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return result
     }
-
+    
 }

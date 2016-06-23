@@ -36,6 +36,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
     
     }
 
@@ -76,13 +77,15 @@ class LoginViewController: UIViewController {
         }
     }
     func uploadPushNotificationData() {
-        let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
-        let pushIdRef = rootReference.child("PushIds")
-        let userPushIdRef = pushIdRef.child(fUser.uid)
-        let pushItem : NSDictionary  = [
-            "pushId": dataManager.onseSignalId!
-        ]
-        userPushIdRef.setValue(pushItem)
+        if let oneSignalId : String = dataManager.onseSignalId {
+            let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
+            let pushIdRef = rootReference.child("PushIds")
+            let userPushIdRef = pushIdRef.child(fUser.uid)
+            let pushItem : NSDictionary  = [
+                "pushId": oneSignalId
+            ]
+            userPushIdRef.setValue(pushItem)
+        }
         
     }
 

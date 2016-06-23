@@ -64,7 +64,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="757" y="-255"/>
+            <point key="canvasLocation" x="-371" y="-1743"/>
         </scene>
         <!--ChatChat-->
         <scene sceneID="b7U-kW-Qaq">
@@ -86,7 +86,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FHj-ro-py4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1136" y="597"/>
+            <point key="canvasLocation" x="1976" y="-619"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Xc9-Ha-6NQ">
@@ -102,7 +102,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sgl-lO-rpe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1460" y="-240"/>
+            <point key="canvasLocation" x="1136" y="-1432"/>
         </scene>
         <!--Image Display View Controller-->
         <scene sceneID="nKf-ja-2RM">
@@ -161,7 +161,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vAp-7B-NmC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1848" y="480"/>
+            <point key="canvasLocation" x="1432" y="-676"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hrY-Ml-5US">
@@ -172,12 +172,74 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="TIa-5a-u2g" kind="relationship" relationship="rootViewController" id="CZw-OJ-8DE"/>
+                        <segue destination="EBu-t1-LGh" kind="relationship" relationship="rootViewController" id="frN-Zz-cz6"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lNE-GT-1KY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-352" y="485"/>
+            <point key="canvasLocation" x="-464" y="-315"/>
+        </scene>
+        <!--Home Menu View Controller-->
+        <scene sceneID="Ofm-mf-2wR">
+            <objects>
+                <viewController id="EBu-t1-LGh" customClass="HomeMenuViewController" customModule="ChatChat" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="r7O-dF-G2V"/>
+                        <viewControllerLayoutGuide type="bottom" id="OgG-0U-IMG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BEd-yB-TYM">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfU-KV-uOU">
+                                <rect key="frame" x="213" y="443" width="128" height="30"/>
+                                <state key="normal" title="View All Messages"/>
+                                <connections>
+                                    <segue destination="TIa-5a-u2g" kind="show" id="T2L-mN-UBJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pMC-57-diA">
+                                <rect key="frame" x="213" y="405" width="143" height="30"/>
+                                <state key="normal" title="Send Message To All"/>
+                                <connections>
+                                    <segue destination="MW1-rX-L2y" kind="show" id="x9Z-re-ia5"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="pMC-57-diA" firstAttribute="centerX" secondItem="BEd-yB-TYM" secondAttribute="centerX" id="7MJ-zh-i0M"/>
+                            <constraint firstItem="pMC-57-diA" firstAttribute="centerY" secondItem="BEd-yB-TYM" secondAttribute="centerY" id="W7y-pY-5az"/>
+                            <constraint firstItem="qfU-KV-uOU" firstAttribute="top" secondItem="pMC-57-diA" secondAttribute="bottom" constant="8" id="it2-ms-pbv"/>
+                            <constraint firstItem="qfU-KV-uOU" firstAttribute="centerX" secondItem="BEd-yB-TYM" secondAttribute="centerX" id="pkp-O8-fl0"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Bxf-bh-KGu"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OU4-OX-RYH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="27" y="-108"/>
+        </scene>
+        <!--Message All View Controller-->
+        <scene sceneID="uJ1-vZ-caw">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="shX-1g-v6I" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="MW1-rX-L2y" customClass="MessageAllViewController" customModule="ChatChat" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mzd-ID-Mx2"/>
+                        <viewControllerLayoutGuide type="bottom" id="Lpt-Tn-R3E"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kXD-vj-DgP">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="axe-2X-iT1" kind="show" identifier="displayImageFromMessageAll" id="794-f8-234"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="367" y="-994"/>
         </scene>
         <!--Message Table View Controller-->
         <scene sceneID="Ypq-v0-dgy">
@@ -209,13 +271,14 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kj4-wd-DOA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="430" y="576"/>
+            <point key="canvasLocation" x="982" y="-232"/>
         </scene>
     </scenes>
     <resources>
         <image name="blankImg.png" width="431" height="320"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ugr-lb-2Ql"/>
+        <segue reference="794-f8-234"/>
+        <segue reference="2Zq-t9-zli"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -16,6 +16,8 @@ class MessageTableViewController: UITableViewController {
     let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com")
     var conversationIdArray : [String] = []
     var conversationIndex = 0
+    var dataManager = DataManager.sharedInstance
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,11 +56,21 @@ class MessageTableViewController: UITableViewController {
     
 
     private func conversationQuery() {
-        let ref = rootReference.child("MessageData")
-        let query = ref.queryLimitedToLast(500)
+        let ref = rootReference.child(dataManager.influencerId + "/IndividualMessageData")
+        let query = ref.queryLimitedToLast(50).queryOrderedByChild("timestamp")
         query.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
             print(snapshot.key)
-            self.conversationIdArray.append(snapshot.key)
+            print(snapshot.value!["timestamp"])
+            self.conversationIdArray.insert(snapshot.key, atIndex: 0)
+            print(snapshot.key)
+            self.tableView.reloadData()
+        }
+        
+        query.observeEventType(.ChildChanged) { (snapshot: FIRDataSnapshot!) in
+            print(snapshot.key)
+            print(snapshot.value!["timestamp"])
+            self.conversationIdArray.removeObject(snapshot.key)
+            self.conversationIdArray.insert(snapshot.key, atIndex: 0)
             print(snapshot.key)
             self.tableView.reloadData()
         }
@@ -126,5 +138,14 @@ class MessageTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+}
 
+extension RangeReplaceableCollectionType where Generator.Element : Equatable {
+    
+    // Remove first collection element that is equal to the given `object`:
+    mutating func removeObject(object : Generator.Element) {
+        if let index = self.indexOf(object) {
+            self.removeAtIndex(index)
+        }
+    }
 }
