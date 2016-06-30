@@ -42,12 +42,15 @@ class LoginViewController: UIViewController {
 
 
   @IBAction func loginDidTouch(sender: AnyObject) {
-//    do {
-//        try FIRAuth.auth()?.signOut()
-//    } catch _ {
-//        print("failed")
-//    }
-    FIRAuth.auth()?.signInAnonymouslyWithCompletion() { user, error in
+    do {
+        try FIRAuth.auth()?.signOut()
+    } catch _ {
+        print("failed")
+    }
+        let twitterCredential = FIRTwitterAuthProvider.credentialWithToken("B8EOuqKKL2hPSufmSO6oIPw2Q", secret: "2hKR3aAGdLZlnfDwh7Q1X3OLl0M2pibPod67buxce2I9MdmXcC")
+        
+        
+        FIRAuth.auth()?.signInWithCredential(twitterCredential, completion: { user, error in
         if error != nil {
             print(error)
 
@@ -64,7 +67,7 @@ class LoginViewController: UIViewController {
                 self.performSegueWithIdentifier("LoginSegueForAdmin", sender: nil) // 3
             }
         }
-    }
+    })
   }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

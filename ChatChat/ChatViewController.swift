@@ -53,7 +53,10 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     var messageCount = 0
     var displayImageSegueIdentifier = "DisplayImage"
     var firebaseContainerRefferenceName = "IndividualMessageData"
-
+    var failedDeliveryIndices = []
+    var indexWithDeliveredAnnotation = 0
+    var isVisible = false
+    
     
     
     @IBOutlet weak var imageBackgroundView: UIView!
@@ -111,6 +114,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     override func viewWillAppear(animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.navigationBarHidden = false
+        isVisible = true
+        addReadReceiptToMessageData()
         
         
     }
@@ -118,6 +123,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
+        isVisible = false
         
     }
     
@@ -234,11 +240,16 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             "hasBeenForwarded": false,
             "mediaDownloadUrl": ""
         ]
+        addUnReadReceiptToMessageData()
         itemRef.setValue(messageItem, withCompletionBlock: { (error, refference) in
+           
             if (error == nil) {
-
+                self.messages.last?.deliveryStatus = "Delivered"
+                self.collectionView.reloadData()
+                
             } else {
-                print(error)
+                self.messages.last?.deliveryStatus = "Delivery Error"
+                self.collectionView.reloadData()
             }
             
         })
@@ -248,7 +259,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     private func observeMessages(totalMessages: UInt) {
-
+        
         var messagesQuery = messageReference.queryLimitedToLast(totalMessages)
         if messageKeyArray.count > 0 {
             messagesQuery = messageReference.queryOrderedByKey().queryStartingAtValue(messageKeyArray[messageKeyArray.count - 1])
@@ -276,6 +287,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             }
             self.finishReceivingMessage()
             self.scrollToBottomAnimated(true)
+            self.addReadReceiptToMessageData()
         }
     }
     
@@ -388,6 +400,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         itemRef.setValue(messageItem)
         itemRef.child("timestamp").setValue(FIRServerValue.timestamp())
         addTimestampToMessageData()
+        addUnReadReceiptToMessageData()
         messageKeyArray.append(itemRef.key)
         defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
@@ -462,7 +475,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         var counter : UInt = 0
         messagesQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
             self.refreshControl.beginRefreshing()
-
+            
             
             print("didReceiveQuery \(snapshot)")
             let id = snapshot.value?["senderId"] as? String
@@ -531,32 +544,61 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
+    func addUnReadReceiptToMessageData() {
+        if dataManager.isUser {
+            let ref = rootReference.child(firebaseContainerRefferenceName + "/" + senderId + "/influencerDidRead")
+            ref.setValue(false)
+        } else {
+            let ref = rootReference.child(firebaseContainerRefferenceName + "/" + senderId + "/userDidRead")
+            ref.setValue(false)
+        }
+    }
+    
+    func addReadReceiptToMessageData() {
+        if (self.isVisible) {
+            if dataManager.isUser {
+                let ref = rootReference.child(firebaseContainerRefferenceName + "/" + senderId + "/userDidRead")
+                ref.setValue(true)
+            } else {
+                let ref = rootReference.child(firebaseContainerRefferenceName + "/" + senderId + "/influencerDidRead")
+                ref.setValue(true)
+            }
+        }
+    }
+    
     func addTimestampToMessageData() {
         let ref = rootReference.child(firebaseContainerRefferenceName + "/" + senderId + "/timestamp")
         ref.setValue(FIRServerValue.timestamp())
         print(FIRServerValue.timestamp())
-        
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellBottomLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
-        if indexPath.item == messages.count - 1 {
-            return NSAttributedString(string: "Delivered")
-        } else {
-            return nil
+        if messages.count > indexPath.item {
+            if let deliveryStatus = messages[indexPath.item].deliveryStatus {
+              if messages[indexPath.item].deliveryStatus == "Delivery Error" {
+                    return NSAttributedString(string: (messages[indexPath.item].deliveryStatus))
+                }
+            }
         }
+        return nil
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellBottomLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        if (indexPath.item == messages.count - 1) {
-            return 20.0
-        } else {
-            return 0
+        if messages.count > indexPath.item {
+            if let deliveryStatus = messages[indexPath.item].deliveryStatus {
+                if (deliveryStatus == "Delivery Error") {
+                    return 20.0
+                }
+            }
         }
+        return 0
     }
     
     
     
 }
+
+
 
 extension String {
     
@@ -598,5 +640,15 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return result
     }
+}
+
+extension UIAlertController {
     
+    public override func shouldAutorotate() -> Bool {
+        return true
+    }
+    
+    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.All
+    }
 }

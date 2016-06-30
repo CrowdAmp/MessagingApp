@@ -15,12 +15,26 @@ class MessageTableViewController: UITableViewController {
 
     let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com")
     var conversationIdArray : [String] = []
+    var conversationTitleArray : [String] = []
+    var messageSnapshotArray : [FIRDataSnapshot] = []
     var conversationIndex = 0
     var dataManager = DataManager.sharedInstance
+    var firebaseStoragePath = ""
+    var vCTitle = ""
+    
+ 
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBarHidden = false
+        self.navigationItem.title = vCTitle
+        self.navigationController?.navigationBar.barTintColor = UIColor(netHex: darkBlueColor)
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+
+
+
         conversationQuery()
         
         
@@ -56,12 +70,20 @@ class MessageTableViewController: UITableViewController {
     
 
     private func conversationQuery() {
-        let ref = rootReference.child(dataManager.influencerId + "/IndividualMessageData")
+        let ref = rootReference.child(dataManager.influencerId + "/" + firebaseStoragePath)
         let query = ref.queryLimitedToLast(50).queryOrderedByChild("timestamp")
         query.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
             print(snapshot.key)
             print(snapshot.value!["timestamp"])
+            self.messageSnapshotArray.insert(snapshot, atIndex: 0)
             self.conversationIdArray.insert(snapshot.key, atIndex: 0)
+
+            if let conversationName : String = snapshot.value?["conversationTitle"] as? String {
+                self.conversationTitleArray.insert(conversationName, atIndex:  0)
+            } else {
+                self.conversationTitleArray.insert(snapshot.key, atIndex:  0)
+
+            }
             print(snapshot.key)
             self.tableView.reloadData()
         }
@@ -69,8 +91,19 @@ class MessageTableViewController: UITableViewController {
         query.observeEventType(.ChildChanged) { (snapshot: FIRDataSnapshot!) in
             print(snapshot.key)
             print(snapshot.value!["timestamp"])
-            self.conversationIdArray.removeObject(snapshot.key)
+            let index = self.conversationIdArray.indexOf(snapshot.key)
+            self.conversationIdArray.removeAtIndex(index!)
             self.conversationIdArray.insert(snapshot.key, atIndex: 0)
+            self.conversationTitleArray.removeAtIndex(index!)
+            self.messageSnapshotArray.removeAtIndex(index!)
+            self.messageSnapshotArray.insert(snapshot, atIndex: 0)
+
+            if let conversationName : String = snapshot.value?["conversationTitle"] as? String {
+                self.conversationTitleArray.insert(conversationName, atIndex:  0)
+            } else {
+                self.conversationTitleArray.insert(snapshot.key, atIndex:  0)
+                
+            }
             print(snapshot.key)
             self.tableView.reloadData()
         }
@@ -79,18 +112,27 @@ class MessageTableViewController: UITableViewController {
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = self.tableView.dequeueReusableCellWithIdentifier("cell")! as UITableViewCell
         
-        cell.textLabel?.text = self.conversationIdArray[indexPath.row]
-        
+        let cell = self.tableView.dequeueReusableCellWithIdentifier("messageCell") as! MessageTableViewCell
+        cell.snapshot = self.messageSnapshotArray[indexPath.row]
         return cell
+        
+        
+//        let cell:UITableViewCell = self.tableView.dequeueReusableCellWithIdentifier("cell")! as UITableViewCell
+//        print(conversationTitleArray)
+//        cell.textLabel?.text = self.conversationTitleArray[indexPath.row]
+//        
+//        return cell
     }
+    
+    
 
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         //super.prepareForSegue(segue, sender: sender)
         let chatVc = segue.destinationViewController as! ChatViewController // 1
         chatVc.senderId = conversationIdArray[conversationIndex]
+        chatVc.firebaseContainerRefferenceName = firebaseStoragePath
         chatVc.senderDisplayName = "Test"
     }
 

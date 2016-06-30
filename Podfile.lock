@@ -1,4 +1,5 @@
 PODS:
+  - AFDateHelper (3.4.2)
   - Firebase (3.2.1):
     - Firebase/Core (= 3.2.1)
   - Firebase/Analytics (3.2.1):
@@ -56,6 +57,7 @@ PODS:
   - SVPullToRefresh (0.4.1)
 
 DEPENDENCIES:
+  - AFDateHelper
   - Firebase
   - Firebase/Auth
   - Firebase/Database
@@ -68,6 +70,7 @@ DEPENDENCIES:
   - SVPullToRefresh
 
 SPEC CHECKSUMS:
+  AFDateHelper: aecee6bb264d6531795649f4ebac47783d2bab74
   Firebase: 6c80ac28d59d06bfd9152a7b6ea17625ca93183d
   FirebaseAnalytics: 6f75b04e6bfb8e0b6e9ef298e04c24eea3b13863
   FirebaseAuth: 94b851fc345ce98036dfedfdc2eddeaef8fa3b4c
@@ -87,6 +90,6 @@ SPEC CHECKSUMS:
   OneSignal: 434facae3389cb0d4d3fc57b9a6cf66db685205e
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
 
-PODFILE CHECKSUM: 49b156ab9430c20611015a1bcda5cc9cd22f1694
+PODFILE CHECKSUM: 0ef9f82a8a8f9c5f30341f3e5ac76988be4ec1d9
 
 COCOAPODS: 1.0.1

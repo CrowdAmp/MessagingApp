@@ -34,6 +34,9 @@
  */
 @property (copy, nonatomic, readonly) NSString *senderId;
 
+//Added by Ruben, checks if message has been delivered
+@property (copy, nonatomic) NSString *deliveryStatus;
+
 /**
  *  Returns the display name for the user who sent the message. This value does not have to be unique.
  */

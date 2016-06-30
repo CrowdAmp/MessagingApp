@@ -10,4 +10,5 @@ target 'ChatChat' do
   pod "NMPopUpViewSwift"	
   pod 'SVPullToRefresh'
   pod 'MBProgressHUD'
+  pod 'OneSignal'
 end
