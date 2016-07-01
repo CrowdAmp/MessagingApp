@@ -1,0 +1,572 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2AF39E3FEABCC02EE9A58124 /* Pods_ChatChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 172A997B717F5594C28CF57E /* Pods_ChatChat.framework */; };
+		BB0405EB1D1A179E0094FB83 /* HomeMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0405EA1D1A179E0094FB83 /* HomeMenuViewController.swift */; };
+		BB0405ED1D1A17B10094FB83 /* MessageAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0405EC1D1A17B10094FB83 /* MessageAllViewController.swift */; };
+		BB109ECD1D11E2C00042A8DE /* blankImg.png in Resources */ = {isa = PBXBuildFile; fileRef = BB109ECC1D11E2C00042A8DE /* blankImg.png */; };
+		BB109ED31D12455F0042A8DE /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB109ED21D12455F0042A8DE /* ImageDisplayViewController.swift */; };
+		BB15CCA91D14B1E400947265 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB15CCA81D14B1E400947265 /* GoogleService-Info.plist */; };
+		BB36C4D51D2219D400EDECD2 /* CrowdAmpLine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4D41D2219D300EDECD2 /* CrowdAmpLine.jpg */; };
+		BB36C4D71D2219E200EDECD2 /* CrowdAmpLogo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4D61D2219E200EDECD2 /* CrowdAmpLogo.jpg */; };
+		BB36C4E21D221E3C00EDECD2 /* Merriweather Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4D91D221E3C00EDECD2 /* Merriweather Light.ttf */; };
+		BB36C4E31D221E3C00EDECD2 /* Merriweather UltraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4DA1D221E3C00EDECD2 /* Merriweather UltraBold.ttf */; };
+		BB36C4E41D221E3C00EDECD2 /* Merriweather-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4DB1D221E3C00EDECD2 /* Merriweather-Bold.ttf */; };
+		BB36C4E51D221E3C00EDECD2 /* Merriweather-BoldIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4DC1D221E3C00EDECD2 /* Merriweather-BoldIt.ttf */; };
+		BB36C4E61D221E3C00EDECD2 /* Merriweather-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4DD1D221E3C00EDECD2 /* Merriweather-Italic.ttf */; };
+		BB36C4E71D221E3C00EDECD2 /* Merriweather-LightIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4DE1D221E3C00EDECD2 /* Merriweather-LightIt.ttf */; };
+		BB36C4E81D221E3C00EDECD2 /* Merriweather-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4DF1D221E3C00EDECD2 /* Merriweather-Regular.ttf */; };
+		BB36C4E91D221E3C00EDECD2 /* Merriweather-UltraBdIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4E01D221E3C00EDECD2 /* Merriweather-UltraBdIt.ttf */; };
+		BB36C4EA1D221E3C00EDECD2 /* SIL Open Font License.txt in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4E11D221E3C00EDECD2 /* SIL Open Font License.txt */; };
+		BB36C4EC1D22FA3300EDECD2 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB36C4EB1D22FA3300EDECD2 /* MessageTableViewCell.swift */; };
+		BB36C4EE1D233BF300EDECD2 /* ApplicationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB36C4ED1D233BF300EDECD2 /* ApplicationConstants.swift */; };
+		BB53557A1BEF765800321277 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5355791BEF765800321277 /* AppDelegate.swift */; };
+		BB53557C1BEF765800321277 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53557B1BEF765800321277 /* LoginViewController.swift */; };
+		BB53557F1BEF765800321277 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB53557D1BEF765800321277 /* Main.storyboard */; };
+		BB5355811BEF765800321277 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB5355801BEF765800321277 /* Assets.xcassets */; };
+		BB5355841BEF765800321277 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB5355821BEF765800321277 /* LaunchScreen.storyboard */; };
+		BB53558F1BEF7E9700321277 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53558E1BEF7E9700321277 /* ChatViewController.swift */; };
+		BB7351AC1D109AA900FA8B4C /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7351AB1D109AA900FA8B4C /* MessageTableViewController.swift */; };
+		BB7351B01D10AE6600FA8B4C /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7351AF1D10AE6600FA8B4C /* DataManager.swift */; };
+		BBF950881D25A5B5008D001E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF950841D25A5B5008D001E /* Fabric.framework */; };
+		BBF950891D25A5B5008D001E /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF950851D25A5B5008D001E /* TwitterKit.framework */; };
+		BBF9508A1D25A5B5008D001E /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BBF950861D25A5B5008D001E /* TwitterKitResources.bundle */; };
+		BBF9508B1D25A5B5008D001E /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF950871D25A5B5008D001E /* TwitterCore.framework */; };
+		BBF9508F1D2712FD008D001E /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BBF9508D1D2712FD008D001E /* OFL.txt */; };
+		BBF950901D2712FD008D001E /* Sarina-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBF9508E1D2712FD008D001E /* Sarina-Regular.ttf */; };
+		BBF950921D27227C008D001E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF950911D27227C008D001E /* Crashlytics.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		172A997B717F5594C28CF57E /* Pods_ChatChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		579E6D00E51046B5041AD474 /* Pods-ChatChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatChat/Pods-ChatChat.debug.xcconfig"; sourceTree = "<group>"; };
+		BB0405EA1D1A179E0094FB83 /* HomeMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeMenuViewController.swift; sourceTree = "<group>"; };
+		BB0405EC1D1A17B10094FB83 /* MessageAllViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageAllViewController.swift; sourceTree = "<group>"; };
+		BB109ECC1D11E2C00042A8DE /* blankImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blankImg.png; sourceTree = "<group>"; };
+		BB109ED21D12455F0042A8DE /* ImageDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDisplayViewController.swift; sourceTree = "<group>"; };
+		BB15CCA81D14B1E400947265 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		BB15CCAA1D185F4F00947265 /* ChatChat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "ChatChat-Bridging-Header.h"; path = "ChatChat/ChatChat-Bridging-Header.h"; sourceTree = "<group>"; };
+		BB36C4D41D2219D300EDECD2 /* CrowdAmpLine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = CrowdAmpLine.jpg; sourceTree = "<group>"; };
+		BB36C4D61D2219E200EDECD2 /* CrowdAmpLogo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = CrowdAmpLogo.jpg; sourceTree = "<group>"; };
+		BB36C4D91D221E3C00EDECD2 /* Merriweather Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather Light.ttf"; sourceTree = "<group>"; };
+		BB36C4DA1D221E3C00EDECD2 /* Merriweather UltraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather UltraBold.ttf"; sourceTree = "<group>"; };
+		BB36C4DB1D221E3C00EDECD2 /* Merriweather-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather-Bold.ttf"; sourceTree = "<group>"; };
+		BB36C4DC1D221E3C00EDECD2 /* Merriweather-BoldIt.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather-BoldIt.ttf"; sourceTree = "<group>"; };
+		BB36C4DD1D221E3C00EDECD2 /* Merriweather-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather-Italic.ttf"; sourceTree = "<group>"; };
+		BB36C4DE1D221E3C00EDECD2 /* Merriweather-LightIt.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather-LightIt.ttf"; sourceTree = "<group>"; };
+		BB36C4DF1D221E3C00EDECD2 /* Merriweather-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather-Regular.ttf"; sourceTree = "<group>"; };
+		BB36C4E01D221E3C00EDECD2 /* Merriweather-UltraBdIt.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather-UltraBdIt.ttf"; sourceTree = "<group>"; };
+		BB36C4E11D221E3C00EDECD2 /* SIL Open Font License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SIL Open Font License.txt"; sourceTree = "<group>"; };
+		BB36C4EB1D22FA3300EDECD2 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
+		BB36C4ED1D233BF300EDECD2 /* ApplicationConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationConstants.swift; sourceTree = "<group>"; };
+		BB5355761BEF765800321277 /* ChatChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB5355791BEF765800321277 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BB53557B1BEF765800321277 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		BB53557E1BEF765800321277 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BB5355801BEF765800321277 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BB5355831BEF765800321277 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BB5355851BEF765800321277 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB53558E1BEF7E9700321277 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		BB7351AB1D109AA900FA8B4C /* MessageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewController.swift; sourceTree = "<group>"; };
+		BB7351AF1D10AE6600FA8B4C /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		BBF950841D25A5B5008D001E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		BBF950851D25A5B5008D001E /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
+		BBF950861D25A5B5008D001E /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = "<group>"; };
+		BBF950871D25A5B5008D001E /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
+		BBF9508D1D2712FD008D001E /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
+		BBF9508E1D2712FD008D001E /* Sarina-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sarina-Regular.ttf"; sourceTree = "<group>"; };
+		BBF950911D27227C008D001E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		C7601AD628ABA83B57DDB4A7 /* Pods-ChatChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatChat/Pods-ChatChat.release.xcconfig"; sourceTree = "<group>"; };
+		E8DDF38A1BEF88DC00B5F45A /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		E8DDF38C1BEF88E200B5F45A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BB5355731BEF765800321277 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AF39E3FEABCC02EE9A58124 /* Pods_ChatChat.framework in Frameworks */,
+				BBF950921D27227C008D001E /* Crashlytics.framework in Frameworks */,
+				BBF9508B1D25A5B5008D001E /* TwitterCore.framework in Frameworks */,
+				BBF950881D25A5B5008D001E /* Fabric.framework in Frameworks */,
+				BBF950891D25A5B5008D001E /* TwitterKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		85DB15776B3ACE41DF631DCF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				579E6D00E51046B5041AD474 /* Pods-ChatChat.debug.xcconfig */,
+				C7601AD628ABA83B57DDB4A7 /* Pods-ChatChat.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		97CEDEF6DA0B51A3522B766A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BBF950841D25A5B5008D001E /* Fabric.framework */,
+				BBF950851D25A5B5008D001E /* TwitterKit.framework */,
+				BBF950861D25A5B5008D001E /* TwitterKitResources.bundle */,
+				BBF950871D25A5B5008D001E /* TwitterCore.framework */,
+				E8DDF38C1BEF88E200B5F45A /* Social.framework */,
+				E8DDF38A1BEF88DC00B5F45A /* Accounts.framework */,
+				172A997B717F5594C28CF57E /* Pods_ChatChat.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BB36C4D81D221E3C00EDECD2 /* merriweather */ = {
+			isa = PBXGroup;
+			children = (
+				BB36C4D91D221E3C00EDECD2 /* Merriweather Light.ttf */,
+				BB36C4DA1D221E3C00EDECD2 /* Merriweather UltraBold.ttf */,
+				BB36C4DB1D221E3C00EDECD2 /* Merriweather-Bold.ttf */,
+				BB36C4DC1D221E3C00EDECD2 /* Merriweather-BoldIt.ttf */,
+				BB36C4DD1D221E3C00EDECD2 /* Merriweather-Italic.ttf */,
+				BB36C4DE1D221E3C00EDECD2 /* Merriweather-LightIt.ttf */,
+				BB36C4DF1D221E3C00EDECD2 /* Merriweather-Regular.ttf */,
+				BB36C4E01D221E3C00EDECD2 /* Merriweather-UltraBdIt.ttf */,
+				BB36C4E11D221E3C00EDECD2 /* SIL Open Font License.txt */,
+			);
+			path = merriweather;
+			sourceTree = "<group>";
+		};
+		BB53556D1BEF765800321277 = {
+			isa = PBXGroup;
+			children = (
+				BB15CCAA1D185F4F00947265 /* ChatChat-Bridging-Header.h */,
+				BB5355781BEF765800321277 /* ChatChat */,
+				BB5355771BEF765800321277 /* Products */,
+				BBF950911D27227C008D001E /* Crashlytics.framework */,
+				85DB15776B3ACE41DF631DCF /* Pods */,
+				97CEDEF6DA0B51A3522B766A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		BB5355771BEF765800321277 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BB5355761BEF765800321277 /* ChatChat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BB5355781BEF765800321277 /* ChatChat */ = {
+			isa = PBXGroup;
+			children = (
+				BB5355901BEF816500321277 /* Controller */,
+				BB5355921BEF818700321277 /* Layout */,
+				BB5355911BEF817A00321277 /* Supporting Files */,
+				BB5355801BEF765800321277 /* Assets.xcassets */,
+				BB36C4D61D2219E200EDECD2 /* CrowdAmpLogo.jpg */,
+				BB36C4D41D2219D300EDECD2 /* CrowdAmpLine.jpg */,
+			);
+			path = ChatChat;
+			sourceTree = "<group>";
+		};
+		BB5355901BEF816500321277 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				BB0405EA1D1A179E0094FB83 /* HomeMenuViewController.swift */,
+				BB0405EC1D1A17B10094FB83 /* MessageAllViewController.swift */,
+				BB53557B1BEF765800321277 /* LoginViewController.swift */,
+				BB109ED21D12455F0042A8DE /* ImageDisplayViewController.swift */,
+				BB53558E1BEF7E9700321277 /* ChatViewController.swift */,
+				BB7351AB1D109AA900FA8B4C /* MessageTableViewController.swift */,
+				BB7351AF1D10AE6600FA8B4C /* DataManager.swift */,
+				BB36C4EB1D22FA3300EDECD2 /* MessageTableViewCell.swift */,
+				BB109ECC1D11E2C00042A8DE /* blankImg.png */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		BB5355911BEF817A00321277 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BB5355791BEF765800321277 /* AppDelegate.swift */,
+				BB36C4ED1D233BF300EDECD2 /* ApplicationConstants.swift */,
+				BB5355851BEF765800321277 /* Info.plist */,
+				BB15CCA81D14B1E400947265 /* GoogleService-Info.plist */,
+				BBF9508C1D2712FD008D001E /* sarina */,
+				BB36C4D81D221E3C00EDECD2 /* merriweather */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BB5355921BEF818700321277 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				BB53557D1BEF765800321277 /* Main.storyboard */,
+				BB5355821BEF765800321277 /* LaunchScreen.storyboard */,
+			);
+			name = Layout;
+			sourceTree = "<group>";
+		};
+		BBF9508C1D2712FD008D001E /* sarina */ = {
+			isa = PBXGroup;
+			children = (
+				BBF9508D1D2712FD008D001E /* OFL.txt */,
+				BBF9508E1D2712FD008D001E /* Sarina-Regular.ttf */,
+			);
+			name = sarina;
+			path = merriweather/sarina;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BB5355751BEF765800321277 /* ChatChat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BB5355881BEF765800321277 /* Build configuration list for PBXNativeTarget "ChatChat" */;
+			buildPhases = (
+				E8CE6FD67453F3208A90364C /* [CP] Check Pods Manifest.lock */,
+				BB5355721BEF765800321277 /* Sources */,
+				BB5355731BEF765800321277 /* Frameworks */,
+				BB5355741BEF765800321277 /* Resources */,
+				6FB7E69470DD81D7984EDE52 /* [CP] Embed Pods Frameworks */,
+				5D170929619EDFD2B561CD41 /* [CP] Copy Pods Resources */,
+				BBF950831D25A597008D001E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChatChat;
+			productName = ChatChat;
+			productReference = BB5355761BEF765800321277 /* ChatChat.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BB53556E1BEF765800321277 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Razeware LLC";
+				TargetAttributes = {
+					BB5355751BEF765800321277 = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = ZM5L5GJ9N4;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = BB5355711BEF765800321277 /* Build configuration list for PBXProject "ChatChat" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BB53556D1BEF765800321277;
+			productRefGroup = BB5355771BEF765800321277 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BB5355751BEF765800321277 /* ChatChat */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BB5355741BEF765800321277 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB36C4E31D221E3C00EDECD2 /* Merriweather UltraBold.ttf in Resources */,
+				BB36C4E61D221E3C00EDECD2 /* Merriweather-Italic.ttf in Resources */,
+				BB5355841BEF765800321277 /* LaunchScreen.storyboard in Resources */,
+				BB36C4E41D221E3C00EDECD2 /* Merriweather-Bold.ttf in Resources */,
+				BBF9508A1D25A5B5008D001E /* TwitterKitResources.bundle in Resources */,
+				BB36C4E81D221E3C00EDECD2 /* Merriweather-Regular.ttf in Resources */,
+				BB36C4E21D221E3C00EDECD2 /* Merriweather Light.ttf in Resources */,
+				BB109ECD1D11E2C00042A8DE /* blankImg.png in Resources */,
+				BB36C4E71D221E3C00EDECD2 /* Merriweather-LightIt.ttf in Resources */,
+				BB36C4E91D221E3C00EDECD2 /* Merriweather-UltraBdIt.ttf in Resources */,
+				BB36C4E51D221E3C00EDECD2 /* Merriweather-BoldIt.ttf in Resources */,
+				BB36C4D51D2219D400EDECD2 /* CrowdAmpLine.jpg in Resources */,
+				BBF9508F1D2712FD008D001E /* OFL.txt in Resources */,
+				BBF950901D2712FD008D001E /* Sarina-Regular.ttf in Resources */,
+				BB36C4EA1D221E3C00EDECD2 /* SIL Open Font License.txt in Resources */,
+				BB36C4D71D2219E200EDECD2 /* CrowdAmpLogo.jpg in Resources */,
+				BB5355811BEF765800321277 /* Assets.xcassets in Resources */,
+				BB15CCA91D14B1E400947265 /* GoogleService-Info.plist in Resources */,
+				BB53557F1BEF765800321277 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D170929619EDFD2B561CD41 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatChat/Pods-ChatChat-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6FB7E69470DD81D7984EDE52 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatChat/Pods-ChatChat-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BBF950831D25A597008D001E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run ee70d864d690cf65cafd0bde84053a247d0a71c6 2cb494161b45aefefedee145b0c986628303cf0bdab0ce38c55bad0fe28c14f5";
+		};
+		E8CE6FD67453F3208A90364C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BB5355721BEF765800321277 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB36C4EE1D233BF300EDECD2 /* ApplicationConstants.swift in Sources */,
+				BB109ED31D12455F0042A8DE /* ImageDisplayViewController.swift in Sources */,
+				BB53557C1BEF765800321277 /* LoginViewController.swift in Sources */,
+				BB36C4EC1D22FA3300EDECD2 /* MessageTableViewCell.swift in Sources */,
+				BB7351B01D10AE6600FA8B4C /* DataManager.swift in Sources */,
+				BB53558F1BEF7E9700321277 /* ChatViewController.swift in Sources */,
+				BB0405EB1D1A179E0094FB83 /* HomeMenuViewController.swift in Sources */,
+				BB7351AC1D109AA900FA8B4C /* MessageTableViewController.swift in Sources */,
+				BB0405ED1D1A17B10094FB83 /* MessageAllViewController.swift in Sources */,
+				BB53557A1BEF765800321277 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		BB53557D1BEF765800321277 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BB53557E1BEF765800321277 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		BB5355821BEF765800321277 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BB5355831BEF765800321277 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BB5355861BEF765800321277 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BB5355871BEF765800321277 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BB5355891BEF765800321277 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 579E6D00E51046B5041AD474 /* Pods-ChatChat.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = ChatChat/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rubenmayer.crowdampmessaging;
+				PRODUCT_NAME = ChatChat;
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatChat/ChatChat-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BB53558A1BEF765800321277 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7601AD628ABA83B57DDB4A7 /* Pods-ChatChat.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = ChatChat/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rubenmayer.crowdampmessaging;
+				PRODUCT_NAME = ChatChat;
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatChat/ChatChat-Bridging-Header.h";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BB5355711BEF765800321277 /* Build configuration list for PBXProject "ChatChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BB5355861BEF765800321277 /* Debug */,
+				BB5355871BEF765800321277 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BB5355881BEF765800321277 /* Build configuration list for PBXNativeTarget "ChatChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BB5355891BEF765800321277 /* Debug */,
+				BB53558A1BEF765800321277 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BB53556E1BEF765800321277 /* Project object */;
+}
