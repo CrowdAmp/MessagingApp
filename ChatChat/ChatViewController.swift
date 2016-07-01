@@ -64,11 +64,20 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        if dataManager.isUser {
+            senderId = FIRAuth.auth()!.currentUser!.uid
+        } else {
+            if senderId.characters.count == 12 && senderId[0] == "+"{
+                title = "(" + senderId[2...4] + ") " + senderId[5...7] + "-" + senderId[8...11]
+            } else {
+                title = senderId
+            }
+        }
         firebaseContainerRefferenceName = dataManager.influencerId + "/" + firebaseContainerRefferenceName
         downloadNotificationId()
         automaticallyScrollsToMostRecentMessage = false
         referenceName = senderId
-        title = "ChatChat"
         setupBubbles()
         // No avatars
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero

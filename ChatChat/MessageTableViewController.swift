@@ -27,6 +27,8 @@ class MessageTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(dataManager.influencerId)
+        
         self.navigationController?.navigationBarHidden = false
         self.navigationItem.title = vCTitle
         self.navigationController?.navigationBar.barTintColor = UIColor(netHex: darkBlueColor)

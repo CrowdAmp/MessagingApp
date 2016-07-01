@@ -23,13 +23,16 @@
 import UIKit
 import Firebase
 import FirebaseMessaging
-//import OneSignal
+import Fabric
+import TwitterKit
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let dm = DataManager.sharedInstance
+    let defaults = NSUserDefaults()
 
 
   override init() {
@@ -37,10 +40,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+   
     
+    Fabric.with([Twitter.self])
+    FIRApp.configure()
 
     
-    FIRApp.configure()
+    
+    logOut()
+    
+    
+
     FIRMessaging.messaging().connectWithCompletion { (error) in
         if (error != nil) {
             print("Unable to connect with FCM. \(error)")
@@ -66,13 +76,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     })
     
+    //set initial VC if logged in 
     
-   
+    self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+    let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+
     
+    if ((Twitter.sharedInstance().sessionStore.session()) != nil) {
+        if dm.isUser {
+            let initialVC: UINavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForUser") as! UINavigationController
+            self.window?.rootViewController = initialVC
+
+        } else {
+            dm.influencerId = defaults.objectForKey("influencerId") as! String
+            let initialVC: UINavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForInfluencer") as! UINavigationController
+            self.window?.rootViewController = initialVC
+        }
+    } else {
+        let initialVC: LoginViewController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForNewUser") as! LoginViewController
+        self.window?.rootViewController = initialVC
+
+    }
+
     return true
 
     
-  }
+    }
+
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         print("didRegister")
@@ -105,5 +135,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("%@", userInfo)
     }
 
+    func logOut() {
+        let store = Twitter.sharedInstance().sessionStore
+        
+        if let userID = store.session()?.userID {
+            store.logOutUserID(userID)
+        }
+        do {
+            try FIRAuth.auth()?.signOut()
+        } catch _ {
+            print("failed")
+        }
+    }
 }
 

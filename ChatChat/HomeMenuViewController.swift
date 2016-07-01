@@ -12,9 +12,15 @@ class HomeMenuViewController: UIViewController {
 
     @IBOutlet weak var messagesAmmountLabel: UILabel!
     @IBOutlet weak var followersAmmountLabel: UILabel!
-    
+    @IBOutlet weak var welcomeLabel: UILabel!
+    var dataManager = DataManager.sharedInstance
     
     override func viewDidLoad() {
+        if dataManager.influencerId.characters.count > 12 {
+            welcomeLabel.text = "Welcome"
+        } else {
+            welcomeLabel.text = "Welcome, " + dataManager.influencerId
+        }
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
@@ -23,6 +29,35 @@ class HomeMenuViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBarHidden = true
+        
+        var url = NSURL(string: "https://peaceful-mountain-72739.herokuapp.com/getTotalMessages/" + dataManager.influencerId)
+        let getTotalMessages = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+            if data != nil {
+                let totalMessages : String? = String(data: data!, encoding: NSUTF8StringEncoding)
+                if totalMessages != nil && Int(totalMessages!) != nil {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.messagesAmmountLabel.text = totalMessages
+                    }
+                    print("totalMessages: \(totalMessages)")
+                }
+                    
+            }
+        }
+        getTotalMessages.resume()
+        
+        url = NSURL(string: "https://peaceful-mountain-72739.herokuapp.com/getTotalFans/" + dataManager.influencerId)
+        let getTotalFans = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+            if data != nil {
+                let totalFans : String? = String(data: data!, encoding: NSUTF8StringEncoding)
+                if totalFans != nil && Int(totalFans!) != nil {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.followersAmmountLabel.text = totalFans
+                    }
+                    print("totalFans: \(totalFans)")
+                }
+            }
+        }
+        getTotalFans.resume()
     }
 
     override func didReceiveMemoryWarning() {

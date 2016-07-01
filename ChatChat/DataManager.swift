@@ -14,6 +14,6 @@ class DataManager {
     var oneSignal : OneSignal?
     var onseSignalId : String?
     var influencerName = "Alex Ramos"
-    var influencerId = "AlexRamos"
+    var influencerId = ""
     
 }
