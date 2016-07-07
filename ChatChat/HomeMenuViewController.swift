@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import TwitterKit
+import FirebaseAuth
 
 class HomeMenuViewController: UIViewController {
 
@@ -14,6 +16,10 @@ class HomeMenuViewController: UIViewController {
     @IBOutlet weak var followersAmmountLabel: UILabel!
     @IBOutlet weak var welcomeLabel: UILabel!
     var dataManager = DataManager.sharedInstance
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
     
     override func viewDidLoad() {
         if dataManager.influencerId.characters.count > 12 {
@@ -58,6 +64,30 @@ class HomeMenuViewController: UIViewController {
             }
         }
         getTotalFans.resume()
+        
+        url = NSURL(string: "https://peaceful-mountain-72739.herokuapp.com/getNewMessages/" + dataManager.influencerId)
+        let getNewMessages = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+            if data != nil {
+                let newMessages : String? = String(data: data!, encoding: NSUTF8StringEncoding)
+                if newMessages != nil && Int(newMessages!) != nil {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        if newMessages == "0" {
+                            self.newMessagesLabel.hidden = true
+                        } else {
+                            self.newMessagesLabel.hidden = false
+                            self.newMessagesLabel.text = newMessages
+                        }
+                    }
+                    
+                    print("newMessages: \(newMessages)")
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.newMessagesLabel.hidden = true
+                    }
+                }
+            }
+        }
+        getNewMessages.resume()
     }
 
     override func didReceiveMemoryWarning() {
@@ -130,6 +160,26 @@ class HomeMenuViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    
+    @IBAction func didPressLogOutButton(sender: AnyObject) {
+        logOut()
+        performSegueWithIdentifier("userDidLogOut", sender: self)
+        
+    }
+    func logOut() {
+        let store = Twitter.sharedInstance().sessionStore
+        
+        if let userID = store.session()?.userID {
+            store.logOutUserID(userID)
+        }
+        do {
+            try FIRAuth.auth()?.signOut()
+        } catch _ {
+            print("failed")
+        }
+    }
+
 
 }
 

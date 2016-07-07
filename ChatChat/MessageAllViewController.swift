@@ -15,6 +15,7 @@ class MessageAllViewController: ChatViewController {
 
     
     override func viewDidLoad() {
+        self.navigationItem.title = "Message All Fans"
         senderId = "sendToAll"
         firebaseContainerRefferenceName = "MessageAllData"
         displayImageSegueIdentifier = "displayImageFromMessageAll"

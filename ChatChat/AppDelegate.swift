@@ -45,13 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     Fabric.with([Twitter.self, Crashlytics.self])
     FIRApp.configure()
-
-    
-    
-    logOut()
-    
-    
-
     FIRMessaging.messaging().connectWithCompletion { (error) in
         if (error != nil) {
             print("Unable to connect with FCM. \(error)")
@@ -81,9 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
     let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-
-    
-    if ((Twitter.sharedInstance().sessionStore.session()) != nil) {
+    if ((Twitter.sharedInstance().sessionStore.session()?.userID) != nil && defaults.objectForKey("influencerId") != nil) {
         if dm.isUser {
             let initialVC: UINavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForUser") as! UINavigationController
             self.window?.rootViewController = initialVC

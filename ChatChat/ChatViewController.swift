@@ -70,6 +70,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         } else {
             if senderId.characters.count == 12 && senderId[0] == "+"{
                 title = "(" + senderId[2...4] + ") " + senderId[5...7] + "-" + senderId[8...11]
+            } else if senderId == "sendToAll" {
+                title = "Message All Fans"
             } else {
                 title = senderId
             }
@@ -96,6 +98,14 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         
         refreshControl.addTarget(self, action: "loadMoreMessages", forControlEvents: UIControlEvents.ValueChanged)
         collectionView.addSubview(refreshControl) // no
+    
+        var i = 0
+        for message in messages {
+            i += 1
+            if message.isMediaMessage {
+               downloadMediaFromFirebase(messageKeyArray[i], type: "image", index: i, sentByUser: message.senderId != dataManager.influencerId)
+            }
+        }
     }
     
     //    func getMessageCount() {
@@ -387,7 +397,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 }
                 
                 let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
-                defaults.setObject(data, forKey: "messages" + senderId)
+                //defaults.setObject(data, forKey: "messages" + senderId) //addedSecond
                 defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
                 
                 finishReceivingMessage()
@@ -469,7 +479,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 messages[index] = imageMessage
             }
             let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
-            defaults.setObject(data, forKey: "messages" + senderId)
+            //defaults.setObject(data, forKey: "messages" + senderId) // Just added
             finishReceivingMessage()
             //            if messages.count > 3 {
             //                self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)

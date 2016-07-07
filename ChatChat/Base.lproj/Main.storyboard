@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -424,9 +425,20 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWs-jK-kpD">
+                                <rect key="frame" x="525" y="49" width="55" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="Log Out">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didPressLogOutButton:" destination="EBu-t1-LGh" eventType="touchUpInside" id="wfC-EM-OlV"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="WWs-jK-kpD" firstAttribute="top" secondItem="r7O-dF-G2V" secondAttribute="bottom" constant="-15" id="1mw-vO-N9C"/>
                             <constraint firstItem="OgG-0U-IMG" firstAttribute="top" secondItem="H0L-q3-miS" secondAttribute="bottom" id="4lW-1z-zEe"/>
                             <constraint firstAttribute="trailingMargin" secondItem="H0L-q3-miS" secondAttribute="trailing" constant="-50" id="ArR-xQ-tlF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="AlT-mH-bNQ" secondAttribute="trailing" constant="-50" id="BDJ-Cv-cUX"/>
@@ -447,6 +459,7 @@
                             <constraint firstItem="H0L-q3-miS" firstAttribute="bottom" secondItem="OgG-0U-IMG" secondAttribute="top" id="o65-He-MeS"/>
                             <constraint firstItem="AZM-ga-kAL" firstAttribute="centerX" secondItem="BEd-yB-TYM" secondAttribute="centerX" id="paL-nX-GRC"/>
                             <constraint firstItem="AlT-mH-bNQ" firstAttribute="leading" secondItem="BEd-yB-TYM" secondAttribute="leading" id="vs5-Vg-Jn8"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="WWs-jK-kpD" secondAttribute="trailing" id="xFc-bz-b8y"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -469,6 +482,7 @@
                         <outlet property="sendMessageToAllButton" destination="pMC-57-diA" id="EHE-aK-LJn"/>
                         <outlet property="viewAllMessagesButton" destination="qfU-KV-uOU" id="vfw-Ru-mh6"/>
                         <outlet property="welcomeLabel" destination="NaY-2n-AZ8" id="WAk-Xm-di7"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="userDidLogOut" id="fvQ-fw-l7e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OU4-OX-RYH" userLabel="First Responder" sceneMemberID="firstResponder"/>

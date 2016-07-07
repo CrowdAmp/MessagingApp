@@ -58,6 +58,7 @@ class LoginViewController: UIViewController {
                 self.defaults.setObject(unwrappedSession.userName, forKey: "influencerId")
                 self.displayProgressHud("Loading")
                 self.authenticateWithFirebase(unwrappedSession.authToken, twitterSecret: unwrappedSession.authTokenSecret)
+
                 
                 } else {
                 NSLog("Login error: %@", error!.localizedDescription);
@@ -93,8 +94,9 @@ class LoginViewController: UIViewController {
                 print("Logged in")
                 
                 self.fUser = user
-                
                 self.uploadPushNotificationData()
+
+                
                 self.removeProgressHuds()
                 if self.dataManager.isUser {
                     self.performSegueWithIdentifier("LoginSegueForUser", sender: nil) // 3
@@ -122,7 +124,12 @@ class LoginViewController: UIViewController {
         if let oneSignalId : String = dataManager.onseSignalId {
             let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
             let pushIdRef = rootReference.child("PushIds")
-            let userPushIdRef = pushIdRef.child(fUser.uid)
+            var userPushIdRef = pushIdRef
+            if dataManager.influencerId != "" {
+                userPushIdRef = pushIdRef.child(dataManager.influencerId)
+            } else {
+                userPushIdRef = pushIdRef.child(fUser.uid)
+            }
             let pushItem : NSDictionary  = [
                 "pushId": oneSignalId
             ]
