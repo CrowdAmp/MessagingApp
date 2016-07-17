@@ -14,6 +14,12 @@ class DataManager {
     var oneSignal : OneSignal?
     var onseSignalId : String?
     var influencerName = "Alex Ramos"
-    var influencerId = ""
+    var influencerId = "" {
+        didSet {
+            if influencerId == "KyleExum" {
+                influencerId = influencerId.lowercaseString
+            }
+        }
+    }
     
 }

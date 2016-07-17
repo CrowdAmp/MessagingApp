@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>HanekeSwift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JSQMessagesViewController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,7 +57,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>483377275D2B4461F6A240822B3D053B</key>
+		<key>2C2B1953A91633859BF7AD238FF567A0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -62,7 +67,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>8A070616192AAF9370072D663B45996A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>95DB89A8BFC5FF0BF98458651D0163CD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CF08CAB6CD7CA66FE0AD58F417D6C3F1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -78,11 +93,6 @@
 			<true/>
 		</dict>
 		<key>F65B5FC465EEAE8D06DA022115DFDF17</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FBFCCE9F80C5218020681652890E7B4F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

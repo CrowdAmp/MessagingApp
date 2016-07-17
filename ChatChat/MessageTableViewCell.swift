@@ -15,11 +15,18 @@ import AFDateHelper
 class MessageTableViewCell: UITableViewCell {
 
     let dataManager = DataManager.sharedInstance
-    var snapshot: FIRDataSnapshot? {
+    
+    var conversationItemData : ConversationItemData? {
         didSet {
             updateUI()
         }
     }
+    
+//    var snapshot: FIRDataSnapshot? {
+//        didSet {
+//            updateUI()
+//        }
+//    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -33,53 +40,17 @@ class MessageTableViewCell: UITableViewCell {
     }
     
     func updateUI() {
-        
-        var snap : AnyObject?
-        for i in 0..<Int(snapshot!.childrenCount){
-            if snapshot!.children.allObjects[i].key[0] != "-" {
-                break
-            } else {
-               snap = snapshot!.children.allObjects[i]
-            }
+        messageContentLabel.text = conversationItemData?.itemText
+        nameLabel.text = conversationItemData?.itemTitle
+        let didRead = conversationItemData?.itemRead
+        if (didRead != nil && didRead!) {
+            self.backgroundColor = UIColor.whiteColor()
+            dateLabel.text = "Read"
+        } else {
+            self.backgroundColor = UIColor(netHex:0xCFDEEA)
+            dateLabel.text = "Unread"
         }
-        
-        if let snapshotForLastMessage : AnyObject = snap {
-            print(snapshotForLastMessage)
-            if let snapshotText = snapshotForLastMessage.value?["text"] as? String{
-                messageContentLabel.text = snapshotText
-            }
-            
-            if let name : String = snapshot!.value?["conversationTitle"] as? String{
-                nameLabel.text = name
-            } else {
-                var nameLabelText = snapshot!.key 
-                if nameLabelText.characters.count == 12 {
-                    nameLabelText = "(" + nameLabelText[2...4] + ") " + nameLabelText[5...7] + "-" + nameLabelText[8...11]
-                }
-                nameLabel.text = nameLabelText
-            }
-            
-            var didReadKey = "influencerDidRead"
-            if dataManager.isUser {
-                didReadKey = "userDidRead"
-            }
-            
-            if let didRead : Bool = snapshot!.value?[didReadKey] as? Bool {
-                if didRead {
-                    self.backgroundColor = UIColor.whiteColor()
-                    dateLabel.text = "Read"
-                } else {
-                    self.backgroundColor = UIColor(netHex:0xCFDEEA)
-                    dateLabel.text = "Unread"
-                    
-                }
-            }
-        }
-
-        
     }
-    
-
     
     @IBOutlet weak var messageContentLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!

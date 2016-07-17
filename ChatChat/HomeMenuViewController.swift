@@ -22,6 +22,7 @@ class HomeMenuViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        newMessagesLabel.hidden = true
         if dataManager.influencerId.characters.count > 12 {
             welcomeLabel.text = "Welcome"
         } else {

@@ -26,6 +26,7 @@ import FirebaseMessaging
 import Fabric
 import TwitterKit
 import Crashlytics
+import FirebaseDatabase
 
 
 @UIApplicationMain
@@ -45,6 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     Fabric.with([Twitter.self, Crashlytics.self])
     FIRApp.configure()
+    FIRDatabase.database().persistenceEnabled = true
     FIRMessaging.messaging().connectWithCompletion { (error) in
         if (error != nil) {
             print("Unable to connect with FCM. \(error)")
@@ -80,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController = initialVC
 
         } else {
-            dm.influencerId = defaults.objectForKey("influencerId") as! String
+            dm.influencerId = "morggkatherinee"//defaults.objectForKey("influencerId") as! String
             let initialVC: UINavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForInfluencer") as! UINavigationController
             self.window?.rootViewController = initialVC
         }

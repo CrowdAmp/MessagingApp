@@ -28,11 +28,11 @@ import FirebaseDatabase
 import FirebaseStorage
 import NMPopUpViewSwift
 import MBProgressHUD
+import Haneke
 //import SVPullToRefresh
 
 
 class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    var messages = [JSQMessage]()
     var outgoingBubbleImageView: JSQMessagesBubbleImage!
     var incomingBubbleImageView: JSQMessagesBubbleImage!
     let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
@@ -56,15 +56,24 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     var failedDeliveryIndices = []
     var indexWithDeliveredAnnotation = 0
     var isVisible = false
-    
+    let cache = Shared.dataCache
+    var messages = [JSQMessage]() {
+        didSet{
+            if messages.count > 0 {
+                removeProgressHuds()
+            }
+        }
+    }
+
     
     
     @IBOutlet weak var imageBackgroundView: UIView!
     
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-       
         if dataManager.isUser {
             senderId = FIRAuth.auth()!.currentUser!.uid
         } else {
@@ -86,26 +95,44 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
         let messagesParentRef = rootReference.child(firebaseContainerRefferenceName)
         messageReference = messagesParentRef.child(referenceName)
-        observeMessages(messagesDisplayed)
-        if let msgs = defaults.objectForKey("messages" + senderId) as? NSData {
-            messages = NSKeyedUnarchiver.unarchiveObjectWithData(msgs) as! [JSQMessage]
+        
+      /*  cache.fetch(key: "messages" + senderId).onSuccess { msgs in
+            self.messages = NSKeyedUnarchiver.unarchiveObjectWithData(msgs) as! [JSQMessage]
+            self.cache.fetch(key: "messageKeyArray" + self.senderId).onSuccess { messageKeyArr in
+                self.messageKeyArray = NSKeyedUnarchiver.unarchiveObjectWithData(messageKeyArr) as! [String]
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.finishReceivingMessage()
+                    self.observeMessages(self.messagesDisplayed)
+                    
+                }
+            }
+            }.onFailure { _ in
+                self.observeMessages(self.messagesDisplayed)
         }
-        if let messageKeyArr = defaults.objectForKey("messageKeyArray" + senderId) as? [String]{
-            messageKeyArray = messageKeyArr
-        }
-        finishReceivingMessage()
+        */
+        self.observeMessages(self.messagesDisplayed)
+
+        
+        
+        //  if let msgs = defaults.objectForKey("messages" + senderId) as? NSData {
+        //    messages = NSKeyedUnarchiver.unarchiveObjectWithData(msgs) as! [JSQMessage]
+        //}
+        //if let messageKeyArr = defaults.objectForKey("messageKeyArray" + senderId) as? [String]{
+        //            messageKeyArray = messageKeyArr
+        //       }
+        //     finishReceivingMessage()
         self.navigationController?.navigationBarHidden = false
         
         refreshControl.addTarget(self, action: "loadMoreMessages", forControlEvents: UIControlEvents.ValueChanged)
         collectionView.addSubview(refreshControl) // no
-    
-        var i = 0
-        for message in messages {
-            i += 1
-            if message.isMediaMessage {
-               downloadMediaFromFirebase(messageKeyArray[i], type: "image", index: i, sentByUser: message.senderId != dataManager.influencerId)
-            }
-        }
+        
+        //        var i = 0
+        //        for message in messages {
+        //            i += 1
+        //            if message.isMediaMessage {
+        //               downloadMediaFromFirebase(messageKeyArray[i], type: "image", index: i, sentByUser: message.senderId != dataManager.influencerId)
+        //            }
+        //        }
     }
     
     //    func getMessageCount() {
@@ -131,12 +158,20 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     
     override func viewWillAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
         navigationController?.navigationBarHidden = false
         isVisible = true
         addReadReceiptToMessageData()
         
         
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if messages.count == 0 {
+            displayProgressHud("Loading")
+        }
     }
     
     
@@ -196,8 +231,10 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 messageKeyArray.append(key)
             }
             let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
-            defaults.setObject(data, forKey: "messages" + senderId)
-            defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
+            cache.set(value: data, key: "messages" + senderId)
+            //defaults.setObject(data, forKey: "messages" + senderId)
+            cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
+            //defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
             
             
         }
@@ -261,7 +298,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         ]
         addUnReadReceiptToMessageData()
         itemRef.setValue(messageItem, withCompletionBlock: { (error, refference) in
-           
+            
             if (error == nil) {
                 self.messages.last?.deliveryStatus = "Delivered"
                 self.collectionView.reloadData()
@@ -397,8 +434,10 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 }
                 
                 let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
+                cache.set(value: data, key: "messages" + senderId)
+                cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
                 //defaults.setObject(data, forKey: "messages" + senderId) //addedSecond
-                defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
+                //defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
                 
                 finishReceivingMessage()
             }
@@ -421,7 +460,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         addTimestampToMessageData()
         addUnReadReceiptToMessageData()
         messageKeyArray.append(itemRef.key)
-        defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
+        cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
+        //defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
     }
     
@@ -479,6 +519,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 messages[index] = imageMessage
             }
             let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
+            cache.set(value: data, key: "messages" + senderId)
             //defaults.setObject(data, forKey: "messages" + senderId) // Just added
             finishReceivingMessage()
             //            if messages.count > 3 {
@@ -531,13 +572,13 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     func displayProgressHud(message : String) {
-        let loadingNotification = MBProgressHUD.showHUDAddedTo(self.view.window, animated: true)
+        let loadingNotification = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.Indeterminate
         loadingNotification.labelText = message
     }
     
     func removeProgressHuds () {
-        MBProgressHUD.hideAllHUDsForView(self.view.window, animated: true)
+        MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
         
     }
     
@@ -594,7 +635,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellBottomLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
         if messages.count > indexPath.item {
             if let deliveryStatus = messages[indexPath.item].deliveryStatus {
-              if messages[indexPath.item].deliveryStatus == "Delivery Error" {
+                if messages[indexPath.item].deliveryStatus == "Delivery Error" {
                     return NSAttributedString(string: (messages[indexPath.item].deliveryStatus))
                 }
             }

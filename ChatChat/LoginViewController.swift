@@ -54,7 +54,7 @@ class LoginViewController: UIViewController {
 
         let logInButton = TWTRLogInButton { (session, error) in
             if let unwrappedSession = session {
-                self.dataManager.influencerId = unwrappedSession.userName
+                self.dataManager.influencerId = "morggkatherinee"//unwrappedSession.userName
                 self.defaults.setObject(unwrappedSession.userName, forKey: "influencerId")
                 self.displayProgressHud("Loading")
                 self.authenticateWithFirebase(unwrappedSession.authToken, twitterSecret: unwrappedSession.authTokenSecret)
