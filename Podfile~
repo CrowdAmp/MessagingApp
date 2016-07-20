@@ -1,6 +1,7 @@
 platform :ios, "9.0"
 use_frameworks!
 target 'ChatChat' do
+  pod 'HanekeSwift'
   pod 'Firebase/Messaging'
   pod 'Firebase'
   pod 'Firebase/Database'   

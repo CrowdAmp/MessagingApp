@@ -34,6 +34,11 @@
 		BB53558F1BEF7E9700321277 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53558E1BEF7E9700321277 /* ChatViewController.swift */; };
 		BB7351AC1D109AA900FA8B4C /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7351AB1D109AA900FA8B4C /* MessageTableViewController.swift */; };
 		BB7351B01D10AE6600FA8B4C /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7351AF1D10AE6600FA8B4C /* DataManager.swift */; };
+		BBF0E8A91D3D6885007CA2B6 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF0E8A31D3D6885007CA2B6 /* FBSDKCoreKit.framework */; };
+		BBF0E8AA1D3D6885007CA2B6 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF0E8A41D3D6885007CA2B6 /* FBSDKLoginKit.framework */; };
+		BBF0E8AB1D3D6885007CA2B6 /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF0E8A51D3D6885007CA2B6 /* FBSDKMessengerShareKit.framework */; };
+		BBF0E8AC1D3D6885007CA2B6 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF0E8A61D3D6885007CA2B6 /* FBSDKShareKit.framework */; };
+		BBF0E8AE1D3D6C6D007CA2B6 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF0E8AD1D3D6C6D007CA2B6 /* Bolts.framework */; };
 		BBF950881D25A5B5008D001E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF950841D25A5B5008D001E /* Fabric.framework */; };
 		BBF950891D25A5B5008D001E /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF950851D25A5B5008D001E /* TwitterKit.framework */; };
 		BBF9508A1D25A5B5008D001E /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BBF950861D25A5B5008D001E /* TwitterKitResources.bundle */; };
@@ -75,6 +80,12 @@
 		BB53558E1BEF7E9700321277 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		BB7351AB1D109AA900FA8B4C /* MessageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewController.swift; sourceTree = "<group>"; };
 		BB7351AF1D10AE6600FA8B4C /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		BBF0E8A11D3D6885007CA2B6 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
+		BBF0E8A31D3D6885007CA2B6 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		BBF0E8A41D3D6885007CA2B6 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		BBF0E8A51D3D6885007CA2B6 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
+		BBF0E8A61D3D6885007CA2B6 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		BBF0E8AD1D3D6C6D007CA2B6 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		BBF950841D25A5B5008D001E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		BBF950851D25A5B5008D001E /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		BBF950861D25A5B5008D001E /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = "<group>"; };
@@ -94,7 +105,12 @@
 			files = (
 				2AF39E3FEABCC02EE9A58124 /* Pods_ChatChat.framework in Frameworks */,
 				BBF950921D27227C008D001E /* Crashlytics.framework in Frameworks */,
+				BBF0E8AB1D3D6885007CA2B6 /* FBSDKMessengerShareKit.framework in Frameworks */,
+				BBF0E8AE1D3D6C6D007CA2B6 /* Bolts.framework in Frameworks */,
+				BBF0E8AA1D3D6885007CA2B6 /* FBSDKLoginKit.framework in Frameworks */,
 				BBF9508B1D25A5B5008D001E /* TwitterCore.framework in Frameworks */,
+				BBF0E8AC1D3D6885007CA2B6 /* FBSDKShareKit.framework in Frameworks */,
+				BBF0E8A91D3D6885007CA2B6 /* FBSDKCoreKit.framework in Frameworks */,
 				BBF950881D25A5B5008D001E /* Fabric.framework in Frameworks */,
 				BBF950891D25A5B5008D001E /* TwitterKit.framework in Frameworks */,
 			);
@@ -115,6 +131,12 @@
 		97CEDEF6DA0B51A3522B766A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BBF0E8AD1D3D6C6D007CA2B6 /* Bolts.framework */,
+				BBF0E8A11D3D6885007CA2B6 /* FBAudienceNetwork.framework */,
+				BBF0E8A31D3D6885007CA2B6 /* FBSDKCoreKit.framework */,
+				BBF0E8A41D3D6885007CA2B6 /* FBSDKLoginKit.framework */,
+				BBF0E8A51D3D6885007CA2B6 /* FBSDKMessengerShareKit.framework */,
+				BBF0E8A61D3D6885007CA2B6 /* FBSDKShareKit.framework */,
 				BBF950841D25A5B5008D001E /* Fabric.framework */,
 				BBF950851D25A5B5008D001E /* TwitterKit.framework */,
 				BBF950861D25A5B5008D001E /* TwitterKitResources.bundle */,

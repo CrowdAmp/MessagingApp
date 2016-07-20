@@ -33,12 +33,10 @@ class MessageTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         lastTableUpdate = NSDate()
-        //FIRDatabase.database().persistenceEnabled = true
         print(dataManager.influencerId)
         
         self.navigationController?.navigationBarHidden = false
         self.navigationItem.title = vCTitle
-        //loadCachedData()
         
         self.navigationController?.navigationBar.barTintColor = UIColor(netHex: darkBlueColor)
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
@@ -105,7 +103,6 @@ class MessageTableViewController: UITableViewController {
                     if self.conversationItemDataArray.count > 40 { // PROBLEM
                         self.conversationItemDataArray.sortInPlace({ $0.timestamp > $1.timestamp })
                     }
-                    self.cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(self.conversationItemDataArray)), key: self.vCTitle + "conversationItemDataArray")
                     dispatch_async(dispatch_get_main_queue()) {
                         self.tableView.reloadData()
                     }
@@ -125,7 +122,6 @@ class MessageTableViewController: UITableViewController {
             }
             self.conversationItemDataArray.insert(ConversationItemData(snapshot: snapshot), atIndex: 0)
             self.conversationItemDataArray.sortInPlace({ $0.timestamp > $1.timestamp })
-            self.cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(self.conversationItemDataArray)), key: self.vCTitle + "conversationItemDataArray")
             dispatch_async(dispatch_get_main_queue()) {
                 self.tableView.reloadData()
             }
@@ -133,7 +129,7 @@ class MessageTableViewController: UITableViewController {
     }
     
     
-    
+    // Not used
     func loadCachedData() {
         cache.fetch(key: self.vCTitle + "conversationItemDataArray").onSuccess { conversationItemDataArrayData in
             self.conversationItemDataArray = NSKeyedUnarchiver.unarchiveObjectWithData(conversationItemDataArrayData) as! [ConversationItemData]

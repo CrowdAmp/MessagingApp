@@ -11,15 +11,15 @@ import Foundation
 class DataManager {
     static let sharedInstance = DataManager()
     var isUser = false
+    var userId = ""
     var oneSignal : OneSignal?
     var onseSignalId : String?
     var influencerName = "Alex Ramos"
-    var influencerId = "" {
+    var influencerId = ""{// "belieberbot" {
         didSet {
             if influencerId == "KyleExum" {
                 influencerId = influencerId.lowercaseString
             }
         }
     }
-    
 }

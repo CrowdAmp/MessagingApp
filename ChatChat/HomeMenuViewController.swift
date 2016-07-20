@@ -9,6 +9,8 @@
 import UIKit
 import TwitterKit
 import FirebaseAuth
+import FirebaseDatabase
+import FirebaseAuth
 
 class HomeMenuViewController: UIViewController {
 
@@ -29,7 +31,7 @@ class HomeMenuViewController: UIViewController {
             welcomeLabel.text = "Welcome, " + dataManager.influencerId
         }
         super.viewDidLoad()
-
+        uploadPushNotificationData()
         // Do any additional setup after loading the view.
     }
     
@@ -125,6 +127,8 @@ class HomeMenuViewController: UIViewController {
             let messageTableVc = segue.destinationViewController as! MessageTableViewController
             messageTableVc.firebaseStoragePath = "GroupedMessageData"
             messageTableVc.vCTitle = "Grouped Messages"
+        } else if let chatVc = segue.destinationViewController as? MessageAllViewController {
+            chatVc.senderDisplayName = "Test"
         }
 
     }
@@ -152,20 +156,15 @@ class HomeMenuViewController: UIViewController {
         return [UIInterfaceOrientationMask.Portrait ,UIInterfaceOrientationMask.PortraitUpsideDown]
     }
 
-    /*
+    
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
     
     
     @IBAction func didPressLogOutButton(sender: AnyObject) {
         logOut()
-        performSegueWithIdentifier("userDidLogOut", sender: self)
+        performSegueWithIdentifier("influencerDidLogOut", sender: self)
         
     }
     func logOut() {
@@ -181,7 +180,21 @@ class HomeMenuViewController: UIViewController {
         }
     }
 
-
+    func uploadPushNotificationData() {
+        if let oneSignalId : String = dataManager.onseSignalId {
+            let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
+            let pushIdRef = rootReference.child("PushIds")
+            var userPushIdRef = pushIdRef
+            if dataManager.influencerId != "" {
+                userPushIdRef = pushIdRef.child(dataManager.influencerId)
+            }
+            let pushItem : NSDictionary  = [
+                "pushId": oneSignalId
+            ]
+            userPushIdRef.setValue(pushItem)
+        }
+        
+    }
 }
 
 extension UINavigationController {

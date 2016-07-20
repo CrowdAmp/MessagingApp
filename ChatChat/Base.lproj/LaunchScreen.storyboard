@@ -18,18 +18,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="CrowdAmpLogo.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="B0k-oF-XgV">
-                                <rect key="frame" x="227" y="230" width="240" height="128"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="transparent B" translatesAutoresizingMaskIntoConstraints="NO" id="UKd-0W-h2O">
+                                <rect key="frame" x="222" y="348" width="240" height="128"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="150" id="sC7-re-j6U"/>
-                                    <constraint firstAttribute="width" secondItem="B0k-oF-XgV" secondAttribute="height" multiplier="301:330" id="ueS-ZJ-4Bp"/>
+                                    <constraint firstAttribute="width" secondItem="UKd-0W-h2O" secondAttribute="height" multiplier="166:214" id="CoP-op-AcN"/>
+                                    <constraint firstAttribute="width" constant="150" id="dMA-3X-Pqp"/>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.3187808513" green="0.1035739041" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="B0k-oF-XgV" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="UC1-0n-fGg"/>
-                            <constraint firstItem="B0k-oF-XgV" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="WmB-0U-Im5"/>
+                            <constraint firstItem="UKd-0W-h2O" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="I1G-Uu-dYl"/>
+                            <constraint firstItem="UKd-0W-h2O" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="L9v-y0-7y5"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -39,6 +39,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="CrowdAmpLogo.jpg" width="301" height="330"/>
+        <image name="transparent B" width="166" height="214"/>
     </resources>
 </document>

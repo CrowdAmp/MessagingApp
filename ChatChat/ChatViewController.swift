@@ -29,6 +29,7 @@ import FirebaseStorage
 import NMPopUpViewSwift
 import MBProgressHUD
 import Haneke
+import TwitterKit
 //import SVPullToRefresh
 
 
@@ -69,13 +70,38 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     @IBOutlet weak var imageBackgroundView: UIView!
     
+    @IBAction func didPressLogOutButton(sender: AnyObject) {
+        self.performSegueWithIdentifier("userDidLogOut", sender: self)
+        logOut()
+    }
     
+    func logOut() {
+        let store = Twitter.sharedInstance().sessionStore
+        
+        if let userID = store.session()?.userID {
+            store.logOutUserID(userID)
+        }
+        do {
+            try FIRAuth.auth()?.signOut()
+        } catch _ {
+            print("failed")
+        }
+    }
+
+    
+    @IBOutlet weak var logOutButton: UIBarButtonItem!
     
     
     override func viewDidLoad() {
+        if senderDisplayName == nil {
+            senderDisplayName = ""
+        }
         super.viewDidLoad()
+        if dataManager.influencerId == "belieberbot" {
+            self.title = "Belieber Bot"
+        }
         if dataManager.isUser {
-            senderId = FIRAuth.auth()!.currentUser!.uid
+            senderId = dataManager.userId
         } else {
             if senderId.characters.count == 12 && senderId[0] == "+"{
                 title = "(" + senderId[2...4] + ") " + senderId[5...7] + "-" + senderId[8...11]
@@ -84,6 +110,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             } else {
                 title = senderId
             }
+            self.navigationItem.rightBarButtonItem = nil
+            logOutButton = nil
         }
         firebaseContainerRefferenceName = dataManager.influencerId + "/" + firebaseContainerRefferenceName
         downloadNotificationId()
@@ -170,7 +198,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         super.viewDidAppear(animated)
         
         if messages.count == 0 {
-            displayProgressHud("Loading")
+            //displayProgressHud("Loading")
         }
     }
     
@@ -230,10 +258,10 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 messages.append(message)
                 messageKeyArray.append(key)
             }
-            let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
-            cache.set(value: data, key: "messages" + senderId)
+            //let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
+            //cache.set(value: data, key: "messages" + senderId)
             //defaults.setObject(data, forKey: "messages" + senderId)
-            cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
+            //cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
             //defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
             
             
@@ -276,8 +304,9 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let imageDisplayVc = segue.destinationViewController as! ImageDisplayViewController // 1
-        imageDisplayVc.image = imageToDisplay
+        if let imageDisplayVc = segue.destinationViewController as? ImageDisplayViewController {
+            imageDisplayVc.image = imageToDisplay
+        }
     }
     
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!,
@@ -433,9 +462,9 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                     }
                 }
                 
-                let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
-                cache.set(value: data, key: "messages" + senderId)
-                cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
+                //let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
+                //cache.set(value: data, key: "messages" + senderId)
+                //cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
                 //defaults.setObject(data, forKey: "messages" + senderId) //addedSecond
                 //defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
                 
@@ -460,7 +489,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         addTimestampToMessageData()
         addUnReadReceiptToMessageData()
         messageKeyArray.append(itemRef.key)
-        cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
+        //cache.set(value: NSKeyedArchiver.archivedDataWithRootObject(Array(messageKeyArray.suffix(cacheLength))), key: "messageKeyArray" + senderId)
         //defaults.setObject(Array(messageKeyArray.suffix(cacheLength)), forKey: "messageKeyArray" + senderId)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
     }
@@ -518,8 +547,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             } else {
                 messages[index] = imageMessage
             }
-            let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
-            cache.set(value: data, key: "messages" + senderId)
+            //let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
+            //cache.set(value: data, key: "messages" + senderId)
             //defaults.setObject(data, forKey: "messages" + senderId) // Just added
             finishReceivingMessage()
             //            if messages.count > 3 {

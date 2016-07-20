@@ -13,4 +13,5 @@ target 'ChatChat' do
   pod 'MBProgressHUD'
   pod 'OneSignal'
   pod "AFDateHelper"
+  pod 'Appsee'	
 end

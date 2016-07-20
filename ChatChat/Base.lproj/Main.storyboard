@@ -90,9 +90,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="7rn-5O-9oT"/>
+                    <navigationItem key="navigationItem" id="7rn-5O-9oT">
+                        <barButtonItem key="rightBarButtonItem" title="Log Out" id="Z4Z-cZ-Tov">
+                            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="didPressLogOutButton:" destination="5z3-67-Woy" id="vjf-eg-YOP"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="logOutButton" destination="Z4Z-cZ-Tov" id="iO0-wh-m6B"/>
                         <segue destination="axe-2X-iT1" kind="show" identifier="DisplayImage" id="jsc-pd-FL2"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="userDidLogOut" id="LVA-7Q-PHm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FHj-ro-py4" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -106,6 +115,10 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="bfs-Kn-ra0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.3187808513" green="0.1035739041" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="5z3-67-Woy" kind="relationship" relationship="rootViewController" id="ugr-lb-2Ql"/>
@@ -482,7 +495,7 @@
                         <outlet property="sendMessageToAllButton" destination="pMC-57-diA" id="EHE-aK-LJn"/>
                         <outlet property="viewAllMessagesButton" destination="qfU-KV-uOU" id="vfw-Ru-mh6"/>
                         <outlet property="welcomeLabel" destination="NaY-2n-AZ8" id="WAk-Xm-di7"/>
-                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="userDidLogOut" id="fvQ-fw-l7e"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="influencerDidLogOut" id="fvQ-fw-l7e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OU4-OX-RYH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -599,8 +612,9 @@
         <image name="blankImg.png" width="431" height="320"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="LVA-7Q-PHm"/>
+        <segue reference="ugr-lb-2Ql"/>
+        <segue reference="jsc-pd-FL2"/>
         <segue reference="T2L-mN-UBJ"/>
-        <segue reference="794-f8-234"/>
-        <segue reference="2Zq-t9-zli"/>
     </inferredMetricsTieBreakers>
 </document>
