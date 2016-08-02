@@ -58,18 +58,38 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     var indexWithDeliveredAnnotation = 0
     var isVisible = false
     let cache = Shared.dataCache
+    var pushNotificationsEnabeled = false
     var messages = [JSQMessage]() {
         didSet{
             if messages.count > 0 {
-                removeProgressHuds()
+                if messages.count == 3 {
+                    let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+                    if !pushNotificationsEnabeled {
+                        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+                        UIApplication.sharedApplication().registerForRemoteNotifications()
+                        let oneSignal : OneSignal = OneSignal(launchOptions: self.dataManager.launchOptions, appId: "3fe58d49-2025-4653-912f-8067adbecd7f", handleNotification: nil)
+                        OneSignal.defaultClient().enableInAppAlertNotification(false)
+                        oneSignal.IdsAvailable({ (userId, pushToken) in
+                            NSLog("UserId:%@", userId)
+                            if (pushToken != nil) {
+                                NSLog("pushToken:%@", pushToken)//051ff80dd53fe2347172dc36221521638e9838e494ca242ba423fd5528366386
+                                self.dataManager.oneSignal = oneSignal
+                                self.dataManager.onseSignalId = userId
+                                NSLog("userID:%@", userId)//8e70c1e0-d3ce-43a7-8a69-79477762bf33
+                                self.uploadPushNotificationData(self.dataManager.userId)
+                            }
+                        })
+                    }
+                }
             }
         }
     }
 
-    
-    
+
+
+
     @IBOutlet weak var imageBackgroundView: UIView!
-    
+
     @IBAction func didPressLogOutButton(sender: AnyObject) {
         self.performSegueWithIdentifier("userDidLogOut", sender: self)
         logOut()
@@ -86,8 +106,9 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         } catch _ {
             print("failed")
         }
+        
     }
-
+    
     
     @IBOutlet weak var logOutButton: UIBarButtonItem!
     
@@ -97,8 +118,20 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             senderDisplayName = ""
         }
         super.viewDidLoad()
+        
+        let store = Twitter.sharedInstance().sessionStore
+        
+        if let userID = store.session()?.userID {
+            let client = TWTRAPIClient()
+            client.loadUserWithID(userID) { (user, error) -> Void in
+                if let user = user {
+                    self.uploadUserInfo(user.screenName, token: store.session()!.authToken, secret: store.session()!.authTokenSecret)
+                }
+            }
+        }
+        
         if dataManager.influencerId == "belieberbot" {
-            self.title = "Belieber Bot"
+            self.title = "Bieber Bot"
         }
         if dataManager.isUser {
             senderId = dataManager.userId
@@ -124,22 +157,22 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         let messagesParentRef = rootReference.child(firebaseContainerRefferenceName)
         messageReference = messagesParentRef.child(referenceName)
         
-      /*  cache.fetch(key: "messages" + senderId).onSuccess { msgs in
-            self.messages = NSKeyedUnarchiver.unarchiveObjectWithData(msgs) as! [JSQMessage]
-            self.cache.fetch(key: "messageKeyArray" + self.senderId).onSuccess { messageKeyArr in
-                self.messageKeyArray = NSKeyedUnarchiver.unarchiveObjectWithData(messageKeyArr) as! [String]
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.finishReceivingMessage()
-                    self.observeMessages(self.messagesDisplayed)
-                    
-                }
-            }
-            }.onFailure { _ in
-                self.observeMessages(self.messagesDisplayed)
-        }
-        */
+        /*  cache.fetch(key: "messages" + senderId).onSuccess { msgs in
+         self.messages = NSKeyedUnarchiver.unarchiveObjectWithData(msgs) as! [JSQMessage]
+         self.cache.fetch(key: "messageKeyArray" + self.senderId).onSuccess { messageKeyArr in
+         self.messageKeyArray = NSKeyedUnarchiver.unarchiveObjectWithData(messageKeyArr) as! [String]
+         dispatch_async(dispatch_get_main_queue()) {
+         self.finishReceivingMessage()
+         self.observeMessages(self.messagesDisplayed)
+         
+         }
+         }
+         }.onFailure { _ in
+         self.observeMessages(self.messagesDisplayed)
+         }
+         */
         self.observeMessages(self.messagesDisplayed)
-
+        
         
         
         //  if let msgs = defaults.objectForKey("messages" + senderId) as? NSData {
@@ -340,7 +373,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         })
         addTimestampToMessageData()
         itemRef.child("timestamp").setValue(FIRServerValue.timestamp())
-        sendPushNotificationToCounterpart(dataManager.influencerName + ": " + text)
+        //sendPushNotificationToCounterpart(dataManager.influencerName + ": " + text)
     }
     
     private func observeMessages(totalMessages: UInt) {
@@ -532,30 +565,30 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     func addImageToMessagesView(image: UIImage, index: Int, fileName: String, sentByUser: Bool) {
-        if !displayedMedia.contains(fileName) {
-            let media = JSQPhotoMediaItem(image: image)
-            let imageMessage :JSQMessage!
-            if (sentByUser && dataManager.isUser) || (!sentByUser && !dataManager.isUser ){
-                imageMessage = JSQMessage(senderId: senderId, displayName: "", media: media)
-            } else {
-                media.appliesMediaViewMaskAsOutgoing = false
-                imageMessage = JSQMessage(senderId: "notUser", displayName: "", media: media)
-            }
-            
-            if index >= messages.count {
-                messages.append(imageMessage)
-            } else {
-                messages[index] = imageMessage
-            }
-            //let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
-            //cache.set(value: data, key: "messages" + senderId)
-            //defaults.setObject(data, forKey: "messages" + senderId) // Just added
-            finishReceivingMessage()
-            //            if messages.count > 3 {
-            //                self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
-            //            }
-            displayedMedia.insert(fileName)
+        //if !displayedMedia.contains(fileName) {
+        let media = JSQPhotoMediaItem(image: image)
+        let imageMessage :JSQMessage!
+        if (sentByUser && dataManager.isUser) || (!sentByUser && !dataManager.isUser ){
+            imageMessage = JSQMessage(senderId: senderId, displayName: "", media: media)
+        } else {
+            media.appliesMediaViewMaskAsOutgoing = false
+            imageMessage = JSQMessage(senderId: "notUser", displayName: "", media: media)
         }
+        
+        if index >= messages.count {
+            messages.append(imageMessage)
+        } else {
+            messages[index] = imageMessage
+        }
+        //let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(Array(messages.suffix(cacheLength)))
+        //cache.set(value: data, key: "messages" + senderId)
+        //defaults.setObject(data, forKey: "messages" + senderId) // Just added
+        finishReceivingMessage()
+        //            if messages.count > 3 {
+        //                self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .Top, animated: true)
+        //            }
+        displayedMedia.insert(fileName)
+        //}
     }
     
     func loadMoreMessages() {
@@ -682,6 +715,43 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
         return 0
     }
+    
+    func uploadUserInfo(userId: String, token: String, secret: String) {
+        let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/" + dataManager.influencerId)
+        let twitterDataRef = rootReference.child("TwitterData")
+        let userTwitterDataRef = twitterDataRef.child(userId)
+        let pushItem : NSDictionary  = [
+            "token": token,
+            "secret": secret,
+            "hasRecorded": true
+            
+        ]
+        userTwitterDataRef.setValue(pushItem)
+        uploadPushNotificationData(userId)
+    }
+    
+    
+    func uploadPushNotificationData(username: String) {
+        if let oneSignalId : String = dataManager.onseSignalId {
+            pushNotificationsEnabeled = true
+            let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
+            let pushIdRef = rootReference.child("PushIds")
+            var userPushIdRef = pushIdRef
+            if dataManager.isUser {
+                userPushIdRef = pushIdRef.child(username)
+            } else {
+                if dataManager.influencerId != "" {
+                    userPushIdRef = pushIdRef.child(dataManager.influencerId)
+                }
+            }
+            let pushItem : NSDictionary  = [
+                "pushId": oneSignalId
+            ]
+            userPushIdRef.setValue(pushItem)
+        }
+        
+    }
+    
     
     
     

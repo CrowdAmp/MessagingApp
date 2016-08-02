@@ -7,9 +7,6 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <mutableArray key="Merriweather-Bold.ttf">
-            <string>Merriweather-Bold</string>
-        </mutableArray>
         <mutableArray key="Merriweather-Regular.ttf">
             <string>Merriweather-Regular</string>
         </mutableArray>
@@ -30,17 +27,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="CrowdAmp" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CyD-mr-Jga">
-                                <rect key="frame" x="202" y="224" width="196" height="32"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Belieber Bot" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CyD-mr-Jga">
+                                <rect key="frame" x="182" y="224" width="216" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="4bL-vv-CGj"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Merriweather-Bold" family="Merriweather" pointSize="35"/>
-                                <color key="textColor" red="0.14901960780000001" green="0.27058823529999998" blue="0.38823529410000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="28"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Influencers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q2E-wV-Ndp">
-                                <rect key="frame" x="214" y="274" width="172.5" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q2E-wV-Ndp">
+                                <rect key="frame" x="214" y="276" width="172.5" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="36" id="B2j-1A-d2N"/>
                                 </constraints>
@@ -48,19 +45,19 @@
                                 <color key="textColor" red="0.18431372549019609" green="0.23137254901960785" blue="0.26666666666666666" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CrowdAmpLogo.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Xck-ur-aAN">
-                                <rect key="frame" x="246.5" y="95" width="107" height="117"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="B - Gradient" translatesAutoresizingMaskIntoConstraints="NO" id="Xck-ur-aAN">
+                                <rect key="frame" x="240" y="99" width="120" height="117"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="150" id="tPZ-0a-GaH"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="250" id="tPZ-0a-GaH"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="ukP-JO-nQj"/>
-                                    <constraint firstAttribute="width" secondItem="Xck-ur-aAN" secondAttribute="height" multiplier="301:330" id="yn5-8e-Ijd"/>
+                                    <constraint firstAttribute="width" secondItem="Xck-ur-aAN" secondAttribute="height" multiplier="322:314" id="yn5-8e-Ijd"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="CyD-mr-Jga" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2Im-gg-7rM"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Q2E-wV-Ndp" secondAttribute="bottom" priority="999" constant="290" id="DC7-Pe-oE0"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Q2E-wV-Ndp" secondAttribute="bottom" priority="999" constant="200" id="DC7-Pe-oE0"/>
                             <constraint firstItem="Xck-ur-aAN" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="75" id="ECM-QO-bQS"/>
                             <constraint firstItem="CyD-mr-Jga" firstAttribute="top" secondItem="Xck-ur-aAN" secondAttribute="bottom" constant="20" id="Y8R-SA-tV8"/>
                             <constraint firstItem="Xck-ur-aAN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="mL8-Sa-U5U"/>
@@ -607,6 +604,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="B - Gradient" width="322" height="394"/>
         <image name="CrowdAmpLine.jpg" width="297" height="10"/>
         <image name="CrowdAmpLogo.jpg" width="301" height="330"/>
         <image name="blankImg.png" width="431" height="320"/>

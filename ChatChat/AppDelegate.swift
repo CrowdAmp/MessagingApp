@@ -22,7 +22,7 @@
 
 import UIKit
 import Firebase
-import FirebaseMessaging
+//import FirebaseMessaging
 import Fabric
 import TwitterKit
 import Crashlytics
@@ -45,7 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         Appsee.start("129760c880774834b9cd9b769dc35f7c")
         Fabric.with([Twitter.self, Crashlytics.self])
@@ -58,23 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Connected to FCM.")
             }
         }
-        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-        UIApplication.sharedApplication().registerForRemoteNotifications()
-        
-        let oneSignal : OneSignal = OneSignal(launchOptions: launchOptions, appId: "3fe58d49-2025-4653-912f-8067adbecd7f", handleNotification: nil)
-        
-        OneSignal.defaultClient().enableInAppAlertNotification(true)
-        
-        oneSignal.IdsAvailable({ (userId, pushToken) in
-            NSLog("UserId:%@", userId)
-            if (pushToken != nil) {
-                NSLog("pushToken:%@", pushToken)//051ff80dd53fe2347172dc36221521638e9838e494ca242ba423fd5528366386
-                self.dm.oneSignal = oneSignal
-                self.dm.onseSignalId = userId
-                NSLog("userID:%@", userId)//8e70c1e0-d3ce-43a7-8a69-79477762bf33
-            }
-        })
+        dm.launchOptions = launchOptions
         
         //set initial VC if logged in
         
@@ -87,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.window?.rootViewController = initialVC
                 
             } else {
-                dm.influencerId = "morggkatherinee"//defaults.objectForKey("influencerId") as! String
+                dm.influencerId = "belieberbot"//defaults.objectForKey("influencerId") as! String
                 let initialVC: UINavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForInfluencer") as! UINavigationController
                 self.window?.rootViewController = initialVC
             }

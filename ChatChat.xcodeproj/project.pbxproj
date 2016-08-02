@@ -26,10 +26,10 @@
 		BB36C4EA1D221E3C00EDECD2 /* SIL Open Font License.txt in Resources */ = {isa = PBXBuildFile; fileRef = BB36C4E11D221E3C00EDECD2 /* SIL Open Font License.txt */; };
 		BB36C4EC1D22FA3300EDECD2 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB36C4EB1D22FA3300EDECD2 /* MessageTableViewCell.swift */; };
 		BB36C4EE1D233BF300EDECD2 /* ApplicationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB36C4ED1D233BF300EDECD2 /* ApplicationConstants.swift */; };
+		BB43F9DE1D513666008B7BC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB43F9DD1D513666008B7BC7 /* Assets.xcassets */; };
 		BB53557A1BEF765800321277 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5355791BEF765800321277 /* AppDelegate.swift */; };
 		BB53557C1BEF765800321277 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53557B1BEF765800321277 /* LoginViewController.swift */; };
 		BB53557F1BEF765800321277 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB53557D1BEF765800321277 /* Main.storyboard */; };
-		BB5355811BEF765800321277 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB5355801BEF765800321277 /* Assets.xcassets */; };
 		BB5355841BEF765800321277 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB5355821BEF765800321277 /* LaunchScreen.storyboard */; };
 		BB53558F1BEF7E9700321277 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53558E1BEF7E9700321277 /* ChatViewController.swift */; };
 		BB7351AC1D109AA900FA8B4C /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7351AB1D109AA900FA8B4C /* MessageTableViewController.swift */; };
@@ -70,11 +70,11 @@
 		BB36C4E11D221E3C00EDECD2 /* SIL Open Font License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SIL Open Font License.txt"; sourceTree = "<group>"; };
 		BB36C4EB1D22FA3300EDECD2 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		BB36C4ED1D233BF300EDECD2 /* ApplicationConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationConstants.swift; sourceTree = "<group>"; };
+		BB43F9DD1D513666008B7BC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB5355761BEF765800321277 /* ChatChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB5355791BEF765800321277 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB53557B1BEF765800321277 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		BB53557E1BEF765800321277 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		BB5355801BEF765800321277 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB5355831BEF765800321277 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB5355851BEF765800321277 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB53558E1BEF7E9700321277 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
@@ -190,9 +190,9 @@
 				BB5355901BEF816500321277 /* Controller */,
 				BB5355921BEF818700321277 /* Layout */,
 				BB5355911BEF817A00321277 /* Supporting Files */,
-				BB5355801BEF765800321277 /* Assets.xcassets */,
 				BB36C4D61D2219E200EDECD2 /* CrowdAmpLogo.jpg */,
 				BB36C4D41D2219D300EDECD2 /* CrowdAmpLine.jpg */,
+				BB43F9DD1D513666008B7BC7 /* Assets.xcassets */,
 			);
 			path = ChatChat;
 			sourceTree = "<group>";
@@ -319,6 +319,7 @@
 				BB36C4E31D221E3C00EDECD2 /* Merriweather UltraBold.ttf in Resources */,
 				BB36C4E61D221E3C00EDECD2 /* Merriweather-Italic.ttf in Resources */,
 				BB5355841BEF765800321277 /* LaunchScreen.storyboard in Resources */,
+				BB43F9DE1D513666008B7BC7 /* Assets.xcassets in Resources */,
 				BB36C4E41D221E3C00EDECD2 /* Merriweather-Bold.ttf in Resources */,
 				BBF9508A1D25A5B5008D001E /* TwitterKitResources.bundle in Resources */,
 				BB36C4E81D221E3C00EDECD2 /* Merriweather-Regular.ttf in Resources */,
@@ -332,7 +333,6 @@
 				BBF950901D2712FD008D001E /* Sarina-Regular.ttf in Resources */,
 				BB36C4EA1D221E3C00EDECD2 /* SIL Open Font License.txt in Resources */,
 				BB36C4D71D2219E200EDECD2 /* CrowdAmpLogo.jpg in Resources */,
-				BB5355811BEF765800321277 /* Assets.xcassets in Resources */,
 				BB15CCA91D14B1E400947265 /* GoogleService-Info.plist in Resources */,
 				BB53557F1BEF765800321277 /* Main.storyboard in Resources */,
 			);
@@ -528,15 +528,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 579E6D00E51046B5041AD474 /* Pods-ChatChat.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ruben Mayer (ZM5L5GJ9N4)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = ChatChat/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rubenmayer.crowdampmessaging;
 				PRODUCT_NAME = ChatChat;
@@ -550,15 +552,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C7601AD628ABA83B57DDB4A7 /* Pods-ChatChat.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ruben Mayer (ZM5L5GJ9N4)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = ChatChat/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rubenmayer.crowdampmessaging;
 				PRODUCT_NAME = ChatChat;

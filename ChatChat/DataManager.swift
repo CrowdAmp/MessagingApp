@@ -10,12 +10,14 @@ import Foundation
 
 class DataManager {
     static let sharedInstance = DataManager()
-    var isUser = false
+    var isUser = true
+    var authenticatedWithFacebook = false
     var userId = ""
     var oneSignal : OneSignal?
     var onseSignalId : String?
     var influencerName = "Alex Ramos"
-    var influencerId = ""{// "belieberbot" {
+    var launchOptions : [NSObject: AnyObject]?
+    var influencerId =  "belieberbot" {
         didSet {
             if influencerId == "KyleExum" {
                 influencerId = influencerId.lowercaseString

@@ -27,16 +27,18 @@ import FirebaseAuth
 import Fabric
 import TwitterKit
 import MBProgressHUD
+import FBSDKCoreKit
 import FBSDKLoginKit
 
 
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     // MARK: Properties
     var fUser : FIRUser!
     let dataManager = DataManager.sharedInstance
     let defaults = NSUserDefaults()
+    var pushNotificationsEnabeled = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,17 +57,15 @@ class LoginViewController: UIViewController {
         let logInButton = TWTRLogInButton { (session, error) in
             if let unwrappedSession = session {
                 if !self.dataManager.isUser {
-                    self.dataManager.influencerId = "morggkatherinee"//unwrappedSession.userName
+                    self.dataManager.influencerId = "belieberbot"//unwrappedSession.userName
                     self.defaults.setObject(unwrappedSession.userName, forKey: "influencerId")
                 } else {
-                    self.uploadUserInfo(unwrappedSession.userName, token: unwrappedSession.authToken)
+                    self.uploadUserInfo(unwrappedSession.userName, token: unwrappedSession.authToken, secret: unwrappedSession.authTokenSecret)
                     self.dataManager.userId = unwrappedSession.userName
                     self.defaults.setObject(unwrappedSession.userName, forKey: "userId")
                 }
                 self.displayProgressHud("Loading")
-                self.authenticateWithFirebase(unwrappedSession.authToken, twitterSecret: unwrappedSession.authTokenSecret)
-                
-                
+                self.authenticateWithFirebase(unwrappedSession.authToken, twitterSecret: unwrappedSession.authTokenSecret, username: unwrappedSession.userName)
                 
             } else {
                 NSLog("Login error: %@", error!.localizedDescription);
@@ -73,8 +73,17 @@ class LoginViewController: UIViewController {
         }
         
         // TODO: Change where the log in button is positioned in your view
-        logInButton.center = CGPoint(x: self.view.center.x , y:self.view.frame.maxY - 100)
+        logInButton.center = CGPoint(x: self.view.center.x , y:self.view.frame.maxY - 120)
         self.view.addSubview(logInButton)
+        
+        
+        let fbLoginButton : FBSDKLoginButton  = FBSDKLoginButton()
+        fbLoginButton.center = self.view.center
+        let frame : CGRect = CGRect(origin: self.view.center, size: logInButton.frame.size)
+        fbLoginButton.frame =  frame
+        fbLoginButton.center = CGPoint(x: self.view.center.x , y:self.view.frame.maxY - 70)
+        self.view.addSubview(fbLoginButton)
+        fbLoginButton.delegate = self
         
         
     }
@@ -88,7 +97,7 @@ class LoginViewController: UIViewController {
         
     }
     
-    func authenticateWithFirebase(twitterToken: String, twitterSecret: String) {
+    func authenticateWithFirebase(twitterToken: String, twitterSecret: String, username: String) {
         let twitterCredential = FIRTwitterAuthProvider.credentialWithToken(twitterToken, secret: twitterSecret)
         
         
@@ -100,7 +109,7 @@ class LoginViewController: UIViewController {
                 print("Logged in")
                 
                 self.fUser = user
-                self.uploadPushNotificationData()
+                self.uploadPushNotificationData(username)
                 
                 
                 self.removeProgressHuds()
@@ -113,7 +122,21 @@ class LoginViewController: UIViewController {
         })
     }
     
-    
+    func presentAlertView(username : String) {
+        let alertController = UIAlertController(title: "One Second!", message: "Since this is a messaging app, it needs push notificaitons to function correctly 😊", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+            UIApplication.sharedApplication().registerForRemoteNotifications()
+            self.uploadPushNotificationData(username)
+        }
+        alertController.addAction(OKAction)
+        
+        self.presentViewController(alertController, animated: true) {
+            print("presented alert")
+        }
+    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
@@ -127,24 +150,37 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func uploadUserInfo(userId: String, token: String) {
-        let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/" + dataManager.influencerId)
-        let twitterDataRef = rootReference.child("TwitterData")
-        let userTwitterDataRef = twitterDataRef.child(userId)
-        let pushItem : NSDictionary  = [
-            "token": token
-        ]
-        userTwitterDataRef.setValue(pushItem)
+    func uploadUserInfo(userId: String, token: String, secret: String) {
+        if !dataManager.authenticatedWithFacebook {
+            let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/" + dataManager.influencerId)
+            let twitterDataRef = rootReference.child("TwitterData")
+            let userTwitterDataRef = twitterDataRef.child(userId)
+            let pushItem : NSDictionary  = [
+                "token": token,
+                "secret": secret
+                
+            ]
+            userTwitterDataRef.setValue(pushItem)
+        } else {
+            let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/" + dataManager.influencerId + "/FacebookData/" + userId)
+            //let twitterDataRef = rootReference.child("TwitterData")
+            let pushItem : NSDictionary  = [
+                "token": token,
+                "name": secret
+            ]
+            rootReference.setValue(pushItem)
+        }
         
     }
     
-    func uploadPushNotificationData() {
+    func uploadPushNotificationData(username: String) {
         if let oneSignalId : String = dataManager.onseSignalId {
+            pushNotificationsEnabeled = true
             let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
             let pushIdRef = rootReference.child("PushIds")
             var userPushIdRef = pushIdRef
             if dataManager.isUser {
-                userPushIdRef = pushIdRef.child(fUser.uid)
+                userPushIdRef = pushIdRef.child(username)
             } else {
                 if dataManager.influencerId != "" {
                     userPushIdRef = pushIdRef.child(dataManager.influencerId)
@@ -169,11 +205,59 @@ class LoginViewController: UIViewController {
     }
     
     func removeProgressHuds () {
-        if self.view.window != nil {
-            MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
-        }
-        
+        MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
     }
     
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        displayProgressHud("Loading")
+        if error == nil {
+            dataManager.authenticatedWithFacebook = true
+            print("did log in")
+            let accessToken = FBSDKAccessToken.currentAccessToken().tokenString
+            
+            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: accessToken, version: nil, HTTPMethod: "GET")
+            req.startWithCompletionHandler({ (connection, result, error : NSError!) -> Void in
+                if(error == nil)
+                {
+                    self.uploadUserInfo(result["id"] as! String, token: accessToken, secret: result["name"] as! String)
+                    self.dataManager.userId = result["id"] as! String
+                    self.defaults.setObject(result["id"] as! String, forKey: "userId")
+                    let facebookCredential = FIRFacebookAuthProvider.credentialWithAccessToken(accessToken)
+                    FIRAuth.auth()?.signInWithCredential(facebookCredential, completion: { user, error in
+                        if error != nil {
+                            self.removeProgressHuds()
+                            print(error)
+                        } else {
+                            self.removeProgressHuds()
+                            print("Logged in")
+                            self.fUser = user
+                            self.uploadPushNotificationData(self.dataManager.userId)
+                            if self.dataManager.isUser {
+                                self.performSegueWithIdentifier("LoginSegueForUser", sender: nil) // 3
+                            } else {
+                                self.performSegueWithIdentifier("LoginSegueForAdmin", sender: nil) // 3
+                            }
+                        }
+                    })
+                
+                } else {
+                self.removeProgressHuds()
+                print("error \(error)")
+            }
+        })
+    }
+    
+    
+}
+
+/*!
+ @abstract Sent to the delegate when the button was used to logout.
+ @param loginButton The button that was clicked.
+ */
+func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+    
+}
+
+
 }
 
