@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
-import AFDateHelper
+//import AFDateHelper
 
 class MessageTableViewCell: UITableViewCell {
 
@@ -33,7 +33,7 @@ class MessageTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -44,7 +44,7 @@ class MessageTableViewCell: UITableViewCell {
         nameLabel.text = conversationItemData?.itemTitle
         let didRead = conversationItemData?.itemRead
         if (didRead != nil && didRead!) {
-            self.backgroundColor = UIColor.whiteColor()
+            self.backgroundColor = UIColor.white
             dateLabel.text = "Read"
         } else {
             self.backgroundColor = UIColor(netHex:0xCFDEEA)
@@ -74,7 +74,7 @@ extension UIColor {
 extension String {
     
     subscript (i: Int) -> Character {
-        return self[self.startIndex.advancedBy(i)]
+        return self[self.characters.index(self.startIndex, offsetBy: i)]
     }
     
     subscript (i: Int) -> String {
@@ -82,8 +82,8 @@ extension String {
     }
     
     subscript (r: Range<Int>) -> String {
-        let start = startIndex.advancedBy(r.startIndex)
-        let end = start.advancedBy(r.endIndex - r.startIndex)
+        let start = characters.index(startIndex, offsetBy: r.lowerBound)
+        let end = <#T##String.CharacterView corresponding to `start`##String.CharacterView#>.index(start, offsetBy: r.upperBound - r.lowerBound)
         return self[Range(start ..< end)]
     }
 }

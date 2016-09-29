@@ -17,13 +17,13 @@ class ImageDisplayViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         imageView.image = image
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .scaleAspectFit
         imageView.addConstraint(NSLayoutConstraint(
             item: imageView,
-            attribute: NSLayoutAttribute.Height,
-            relatedBy: NSLayoutRelation.Equal,
+            attribute: NSLayoutAttribute.height,
+            relatedBy: NSLayoutRelation.equal,
             toItem: imageView,
-            attribute: NSLayoutAttribute.Width,
+            attribute: NSLayoutAttribute.width,
             multiplier: image.size.height / image.size.width,
             constant: 0))
     }
@@ -31,9 +31,9 @@ class ImageDisplayViewController: UIViewController {
 
     override func viewDidLoad() {
         
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(ImageDisplayViewController.respondToSwipeGesture(_:)))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.Right
+        swipeRight.direction = UISwipeGestureRecognizerDirection.right
         self.view.addGestureRecognizer(swipeRight)
         
         super.viewDidLoad()
@@ -42,15 +42,15 @@ class ImageDisplayViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+    func respondToSwipeGesture(_ gesture: UIGestureRecognizer) {
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
             
             switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.Right:
+            case UISwipeGestureRecognizerDirection.right:
                 print("didSwipeRight")
-                self.navigationController?.popViewControllerAnimated(true)
+                self.navigationController?.popViewController(animated: true)
             default:
                 break
             }

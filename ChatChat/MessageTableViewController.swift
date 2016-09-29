@@ -11,10 +11,30 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import Haneke
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class MessageTableViewController: UITableViewController {
     
-    let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com")
+    let rootReference = FIRDatabase.database().reference(fromURL: "https://crowdamp-messaging.firebaseio.com")
     // var conversationIdArray : [String] = []
     //var conversationTitleArray : [String] = []
     var messageSnapshotArray : [FIRDataSnapshot] = []
@@ -24,7 +44,7 @@ class MessageTableViewController: UITableViewController {
     var firebaseStoragePath = ""
     var vCTitle = ""
     let cache = Shared.dataCache
-    var lastTableUpdate : NSDate?
+    var lastTableUpdate : Date?
     
     
     
@@ -32,15 +52,15 @@ class MessageTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        lastTableUpdate = NSDate()
+        lastTableUpdate = Date()
         print(dataManager.influencerId)
         
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         self.navigationItem.title = vCTitle
         
         self.navigationController?.navigationBar.barTintColor = UIColor(netHex: darkBlueColor)
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         
         conversationQuery()
         
@@ -60,33 +80,33 @@ class MessageTableViewController: UITableViewController {
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return conversationItemDataArray.count
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        conversationIndex = indexPath.row
-        performSegueWithIdentifier("SegueToConversation" , sender: self) //SegueToConversation
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        conversationIndex = (indexPath as NSIndexPath).row
+        performSegue(withIdentifier: "SegueToConversation" , sender: self) //SegueToConversation
     }
     
     
     
     
-    private func conversationQuery() {
+    fileprivate func conversationQuery() {
         let ref = rootReference.child(dataManager.influencerId + "/" + firebaseStoragePath)
-        let query = ref.queryLimitedToLast(50).queryOrderedByChild("timestamp")
+        let query = ref.queryLimited(toLast: 50).queryOrdered(byChild: "timestamp")
         var conversationItemDataArrayBuffer : [ConversationItemData] = []
         
-        query.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
+        query.observe(.childAdded) { (snapshot: FIRDataSnapshot!) in
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async{
                 
-                conversationItemDataArrayBuffer.insert(ConversationItemData(snapshot: snapshot), atIndex: 0)
+                conversationItemDataArrayBuffer.insert(ConversationItemData(snapshot: snapshot), at: 0)
                 
                 
                 if self.conversationItemDataArray.count <= conversationItemDataArrayBuffer.count{
@@ -94,35 +114,35 @@ class MessageTableViewController: UITableViewController {
                     var i = 0 // PROBLEM
                     for item in self.conversationItemDataArray {
                         if item.timestamp == nil {
-                            self.conversationItemDataArray.removeAtIndex(i)
+                            self.conversationItemDataArray.remove(at: i)
                         }
                         i += 1
                         
                     }
                     
                     if self.conversationItemDataArray.count > 40 { // PROBLEM
-                        self.conversationItemDataArray.sortInPlace({ $0.timestamp > $1.timestamp })
+                        //self.conversationItemDataArray.sortInPlace({ $0.timestamp > $1.timestamp })
                     }
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
                 }
             }
         }
         
-        query.observeEventType(.ChildChanged) { (snapshot: FIRDataSnapshot!) in
+        query.observe(.childChanged) { (snapshot: FIRDataSnapshot!) in
             
             print(snapshot.key)
-            if let index = self.conversationItemDataArray.indexOf({$0.itemId == snapshot.key}) {
-                self.conversationItemDataArray.removeAtIndex(index)
+            if let index = self.conversationItemDataArray.index(where: {$0.itemId == snapshot.key}) {
+                self.conversationItemDataArray.remove(at: index)
             } else {
                 if (self.conversationItemDataArray.count > 40) {
                     self.conversationItemDataArray.removeLast()
                 }
             }
-            self.conversationItemDataArray.insert(ConversationItemData(snapshot: snapshot), atIndex: 0)
-            self.conversationItemDataArray.sortInPlace({ $0.timestamp > $1.timestamp })
-            dispatch_async(dispatch_get_main_queue()) {
+            self.conversationItemDataArray.insert(ConversationItemData(snapshot: snapshot), at: 0)
+            self.conversationItemDataArray.sort(by: { $0.timestamp > $1.timestamp })
+            DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
@@ -132,20 +152,20 @@ class MessageTableViewController: UITableViewController {
     // Not used
     func loadCachedData() {
         cache.fetch(key: self.vCTitle + "conversationItemDataArray").onSuccess { conversationItemDataArrayData in
-            self.conversationItemDataArray = NSKeyedUnarchiver.unarchiveObjectWithData(conversationItemDataArrayData) as! [ConversationItemData]
+            self.conversationItemDataArray = NSKeyedUnarchiver.unarchiveObject(with: conversationItemDataArrayData) as! [ConversationItemData]
             self.tableView.reloadData()
         }
     }
     
     
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = self.tableView.dequeueReusableCellWithIdentifier("messageCell") as! MessageTableViewCell
-        if (indexPath.row < conversationItemDataArray.count) {
-            cell.conversationItemData = self.conversationItemDataArray[indexPath.row]
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: "messageCell") as! MessageTableViewCell
+        if ((indexPath as NSIndexPath).row < conversationItemDataArray.count) {
+            cell.conversationItemData = self.conversationItemDataArray[(indexPath as NSIndexPath).row]
         } else {
-            print(indexPath.row)
+            print((indexPath as NSIndexPath).row)
         }
         return cell
         
@@ -160,9 +180,9 @@ class MessageTableViewController: UITableViewController {
     
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
-        let chatVc = segue.destinationViewController as! ChatViewController // 1
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        let chatVc = segue.destination as! ChatViewController // 1
         print(conversationItemDataArray.count)
         print(conversationItemDataArray[conversationIndex])
         chatVc.senderId = conversationItemDataArray[conversationIndex].itemId!
@@ -230,10 +250,10 @@ class ConversationItemData: NSObject {
         
         var snap : AnyObject?
         for i in 0..<Int(snapshot.childrenCount){
-            if snapshot.children.allObjects[i].key[0] != "-" {
+            if (snapshot.children.allObjects[i] as AnyObject).key[0] != "-" {
                 break
             } else {
-                snap = snapshot.children.allObjects[i]
+                snap = snapshot.children.allObjects[i] as AnyObject?
             }
         }
         
@@ -271,11 +291,11 @@ class ConversationItemData: NSObject {
     }
     
     
-    func encodeWithCoder(archiver: NSCoder) {
-        archiver.encodeObject(itemTitle, forKey: "itemTitle")
-        archiver.encodeObject(itemText, forKey: "itemText")
-        archiver.encodeObject(itemRead, forKey: "itemRead")
-        archiver.encodeObject(itemId, forKey: "itemId")
+    func encodeWithCoder(_ archiver: NSCoder) {
+        archiver.encode(itemTitle, forKey: "itemTitle")
+        archiver.encode(itemText, forKey: "itemText")
+        archiver.encode(itemRead, forKey: "itemRead")
+        archiver.encode(itemId, forKey: "itemId")
         // archiver.encodeObject(timestamp, forKey: "timestamp")
         
         
@@ -283,10 +303,10 @@ class ConversationItemData: NSObject {
     
     required init(coder unarchiver: NSCoder) {
         super.init()
-        itemTitle = unarchiver.decodeObjectForKey("itemTitle") as? String
-        itemText = unarchiver.decodeObjectForKey("itemText") as? String
-        itemRead = unarchiver.decodeObjectForKey("itemRead") as? Bool
-        itemId = unarchiver.decodeObjectForKey("itemId") as? String
+        itemTitle = unarchiver.decodeObject(forKey: "itemTitle") as? String
+        itemText = unarchiver.decodeObject(forKey: "itemText") as? String
+        itemRead = unarchiver.decodeObject(forKey: "itemRead") as? Bool
+        itemId = unarchiver.decodeObject(forKey: "itemId") as? String
         //timestamp = unarchiver.decodeObjectForKey("timestamp") as! String
         
         
@@ -296,39 +316,39 @@ class ConversationItemData: NSObject {
     
 }
 
-extension RangeReplaceableCollectionType where Generator.Element : Equatable {
+extension RangeReplaceableCollection where Iterator.Element : Equatable {
     
     // Remove first collection element that is equal to the given `object`:
-    mutating func removeObject(object : Generator.Element) {
-        if let index = self.indexOf(object) {
-            self.removeAtIndex(index)
+    mutating func removeObject(_ object : Iterator.Element) {
+        if let index = self.index(of: object) {
+            self.remove(at: index)
         }
     }
 }
 
-extension NSDate {
-    func yearsFrom(date: NSDate) -> Int {
-        return NSCalendar.currentCalendar().components(.Year, fromDate: date, toDate: self, options: []).year
+extension Date {
+    func yearsFrom(_ date: Date) -> Int {
+        return (Calendar.current as NSCalendar).components(.year, from: date, to: self, options: []).year!
     }
-    func monthsFrom(date: NSDate) -> Int {
-        return NSCalendar.currentCalendar().components(.Month, fromDate: date, toDate: self, options: []).month
+    func monthsFrom(_ date: Date) -> Int {
+        return (Calendar.current as NSCalendar).components(.month, from: date, to: self, options: []).month!
     }
-    func weeksFrom(date: NSDate) -> Int {
-        return NSCalendar.currentCalendar().components(.WeekOfYear, fromDate: date, toDate: self, options: []).weekOfYear
+    func weeksFrom(_ date: Date) -> Int {
+        return (Calendar.current as NSCalendar).components(.weekOfYear, from: date, to: self, options: []).weekOfYear!
     }
-    func daysFrom(date: NSDate) -> Int {
-        return NSCalendar.currentCalendar().components(.Day, fromDate: date, toDate: self, options: []).day
+    func daysFrom(_ date: Date) -> Int {
+        return (Calendar.current as NSCalendar).components(.day, from: date, to: self, options: []).day!
     }
-    func hoursFrom(date: NSDate) -> Int {
-        return NSCalendar.currentCalendar().components(.Hour, fromDate: date, toDate: self, options: []).hour
+    func hoursFrom(_ date: Date) -> Int {
+        return (Calendar.current as NSCalendar).components(.hour, from: date, to: self, options: []).hour!
     }
-    func minutesFrom(date: NSDate) -> Int{
-        return NSCalendar.currentCalendar().components(.Minute, fromDate: date, toDate: self, options: []).minute
+    func minutesFrom(_ date: Date) -> Int{
+        return (Calendar.current as NSCalendar).components(.minute, from: date, to: self, options: []).minute!
     }
-    func secondsFrom(date: NSDate) -> Int{
-        return NSCalendar.currentCalendar().components(.Second, fromDate: date, toDate: self, options: []).second
+    func secondsFrom(_ date: Date) -> Int{
+        return (Calendar.current as NSCalendar).components(.second, from: date, to: self, options: []).second!
     }
-    func offsetFrom(date: NSDate) -> String {
+    func offsetFrom(_ date: Date) -> String {
         if yearsFrom(date)   > 0 { return "\(yearsFrom(date))y"   }
         if monthsFrom(date)  > 0 { return "\(monthsFrom(date))M"  }
         if weeksFrom(date)   > 0 { return "\(weeksFrom(date))w"   }

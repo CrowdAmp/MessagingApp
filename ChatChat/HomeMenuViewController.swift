@@ -19,12 +19,12 @@ class HomeMenuViewController: UIViewController {
     @IBOutlet weak var welcomeLabel: UILabel!
     var dataManager = DataManager.sharedInstance
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
     override func viewDidLoad() {
-        newMessagesLabel.hidden = true
+        newMessagesLabel.isHidden = true
         if dataManager.influencerId.characters.count > 12 {
             welcomeLabel.text = "Welcome"
         } else {
@@ -35,61 +35,61 @@ class HomeMenuViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
         
-        var url = NSURL(string: "https://peaceful-mountain-72739.herokuapp.com/getTotalMessages/" + dataManager.influencerId)
-        let getTotalMessages = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+        var url = URL(string: "https://peaceful-mountain-72739.herokuapp.com/getTotalMessages/" + dataManager.influencerId)
+        let getTotalMessages = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
             if data != nil {
-                let totalMessages : String? = String(data: data!, encoding: NSUTF8StringEncoding)
+                let totalMessages : String? = String(data: data!, encoding: String.Encoding.utf8)
                 if totalMessages != nil && Int(totalMessages!) != nil {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         self.messagesAmmountLabel.text = totalMessages
                     }
                     print("totalMessages: \(totalMessages)")
                 }
                     
             }
-        }
+        }) 
         getTotalMessages.resume()
         
-        url = NSURL(string: "https://peaceful-mountain-72739.herokuapp.com/getTotalFans/" + dataManager.influencerId)
-        let getTotalFans = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+        url = URL(string: "https://peaceful-mountain-72739.herokuapp.com/getTotalFans/" + dataManager.influencerId)
+        let getTotalFans = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
             if data != nil {
-                let totalFans : String? = String(data: data!, encoding: NSUTF8StringEncoding)
+                let totalFans : String? = String(data: data!, encoding: String.Encoding.utf8)
                 if totalFans != nil && Int(totalFans!) != nil {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         self.followersAmmountLabel.text = totalFans
                     }
                     print("totalFans: \(totalFans)")
                 }
             }
-        }
+        }) 
         getTotalFans.resume()
         
-        url = NSURL(string: "https://peaceful-mountain-72739.herokuapp.com/getNewMessages/" + dataManager.influencerId)
-        let getNewMessages = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+        url = URL(string: "https://peaceful-mountain-72739.herokuapp.com/getNewMessages/" + dataManager.influencerId)
+        let getNewMessages = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
             if data != nil {
-                let newMessages : String? = String(data: data!, encoding: NSUTF8StringEncoding)
+                let newMessages : String? = String(data: data!, encoding: String.Encoding.utf8)
                 if newMessages != nil && Int(newMessages!) != nil {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         if newMessages == "0" {
-                            self.newMessagesLabel.hidden = true
+                            self.newMessagesLabel.isHidden = true
                         } else {
-                            self.newMessagesLabel.hidden = false
+                            self.newMessagesLabel.isHidden = false
                             self.newMessagesLabel.text = newMessages
                         }
                     }
                     
                     print("newMessages: \(newMessages)")
                 } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.newMessagesLabel.hidden = true
+                    DispatchQueue.main.async {
+                        self.newMessagesLabel.isHidden = true
                     }
                 }
             }
-        }
+        }) 
         getNewMessages.resume()
     }
 
@@ -113,21 +113,21 @@ class HomeMenuViewController: UIViewController {
         messagesAmmountLabel.sizeToFit()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
         let backItem = UIBarButtonItem()
         backItem.title = ""
         navigationItem.backBarButtonItem = backItem
         if segue.identifier == "viewAllMessagesSegue" {
-            let messageTableVc = segue.destinationViewController as! MessageTableViewController
+            let messageTableVc = segue.destination as! MessageTableViewController
             messageTableVc.firebaseStoragePath = "IndividualMessageData"
             messageTableVc.vCTitle = "All Messages"
         
         } else if segue.identifier == "replyToGroupedMessagesSegue" {
-            let messageTableVc = segue.destinationViewController as! MessageTableViewController
+            let messageTableVc = segue.destination as! MessageTableViewController
             messageTableVc.firebaseStoragePath = "GroupedMessageData"
             messageTableVc.vCTitle = "Grouped Messages"
-        } else if let chatVc = segue.destinationViewController as? MessageAllViewController {
+        } else if let chatVc = segue.destination as? MessageAllViewController {
             chatVc.senderDisplayName = "Test"
         }
 
@@ -141,10 +141,10 @@ class HomeMenuViewController: UIViewController {
      @IBOutlet weak var viewAllMessagesButton: UIButton!
     
     @IBOutlet weak var newMessagesLabel: UILabel!
-    override func shouldAutorotate() -> Bool {
-        if (UIDevice.currentDevice().orientation == UIDeviceOrientation.Portrait ||
-            UIDevice.currentDevice().orientation == UIDeviceOrientation.PortraitUpsideDown ||
-            UIDevice.currentDevice().orientation == UIDeviceOrientation.Unknown) {
+    override var shouldAutorotate : Bool {
+        if (UIDevice.current.orientation == UIDeviceOrientation.portrait ||
+            UIDevice.current.orientation == UIDeviceOrientation.portraitUpsideDown ||
+            UIDevice.current.orientation == UIDeviceOrientation.unknown) {
             return true
         }
         else {
@@ -152,8 +152,8 @@ class HomeMenuViewController: UIViewController {
         }
     }
     
-     internal override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return [UIInterfaceOrientationMask.Portrait ,UIInterfaceOrientationMask.PortraitUpsideDown]
+     internal override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return [UIInterfaceOrientationMask.portrait ,UIInterfaceOrientationMask.portraitUpsideDown]
     }
 
     
@@ -162,9 +162,9 @@ class HomeMenuViewController: UIViewController {
     
     
     
-    @IBAction func didPressLogOutButton(sender: AnyObject) {
+    @IBAction func didPressLogOutButton(_ sender: AnyObject) {
         logOut()
-        performSegueWithIdentifier("influencerDidLogOut", sender: self)
+        performSegue(withIdentifier: "influencerDidLogOut", sender: self)
         
     }
     func logOut() {
@@ -182,7 +182,7 @@ class HomeMenuViewController: UIViewController {
 
     func uploadPushNotificationData() {
         if let oneSignalId : String = dataManager.onseSignalId {
-            let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
+            let rootReference = FIRDatabase.database().reference(fromURL: "https://crowdamp-messaging.firebaseio.com/")
             let pushIdRef = rootReference.child("PushIds")
             var userPushIdRef = pushIdRef
             if dataManager.influencerId != "" {
@@ -198,11 +198,11 @@ class HomeMenuViewController: UIViewController {
 }
 
 extension UINavigationController {
-    public override func shouldAutorotate() -> Bool {
-        return visibleViewController!.shouldAutorotate()
+    open override var shouldAutorotate : Bool {
+        return visibleViewController!.shouldAutorotate
     }
     
-    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return (visibleViewController?.supportedInterfaceOrientations())!
+    open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return (visibleViewController?.supportedInterfaceOrientations)!
     }
 }

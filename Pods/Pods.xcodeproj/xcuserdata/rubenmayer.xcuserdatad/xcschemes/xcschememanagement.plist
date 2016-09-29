@@ -4,11 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>AFDateHelper.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>HanekeSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -67,7 +62,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8A070616192AAF9370072D663B45996A</key>
+		<key>6BAEB0E8FDC9EF90BA4EF29216FE74B1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -77,7 +72,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CF08CAB6CD7CA66FE0AD58F417D6C3F1</key>
+		<key>95E477C6AF4EEE951410309B7F366E14</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -88,11 +83,6 @@
 			<true/>
 		</dict>
 		<key>EDA125ADA52355B7CA6DF7BA96918357</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F65B5FC465EEAE8D06DA022115DFDF17</key>
 		<dict>
 			<key>primary</key>
 			<true/>

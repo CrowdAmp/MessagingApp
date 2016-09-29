@@ -36,7 +36,7 @@ import TwitterKit
 class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var outgoingBubbleImageView: JSQMessagesBubbleImage!
     var incomingBubbleImageView: JSQMessagesBubbleImage!
-    let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
+    let rootReference = FIRDatabase.database().reference(fromURL: "https://crowdamp-messaging.firebaseio.com/")
     var messageReference: FIRDatabaseReference!
     var referenceName = ""
     let dataManager = DataManager.sharedInstance
@@ -44,7 +44,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     var videosRef : FIRStorageReference!
     var displayedMedia = Set<String>()
     var imageToDisplay : UIImage!
-    let defaults = NSUserDefaults()
+    let defaults = UserDefaults()
     var messageKeyArray : [String] = []
     let cacheLength = 15
     let refreshControl = UIRefreshControl()
@@ -63,13 +63,13 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         didSet{
             if messages.count > 0 {
                 if messages.count == 3 {
-                    let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+                    let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
                     if !pushNotificationsEnabeled {
-                        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-                        UIApplication.sharedApplication().registerForRemoteNotifications()
+                        UIApplication.shared.registerUserNotificationSettings(settings)
+                        UIApplication.shared.registerForRemoteNotifications()
                         let oneSignal : OneSignal = OneSignal(launchOptions: self.dataManager.launchOptions, appId: "3fe58d49-2025-4653-912f-8067adbecd7f", handleNotification: nil)
-                        OneSignal.defaultClient().enableInAppAlertNotification(false)
-                        oneSignal.IdsAvailable({ (userId, pushToken) in
+                        OneSignal.defaultClient().enable(inAppAlertNotification: false)
+                        oneSignal.idsAvailable({ (userId, pushToken) in
                             NSLog("UserId:%@", userId)
                             if (pushToken != nil) {
                                 NSLog("pushToken:%@", pushToken)//051ff80dd53fe2347172dc36221521638e9838e494ca242ba423fd5528366386
@@ -90,8 +90,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
 
     @IBOutlet weak var imageBackgroundView: UIView!
 
-    @IBAction func didPressLogOutButton(sender: AnyObject) {
-        self.performSegueWithIdentifier("userDidLogOut", sender: self)
+    @IBAction func didPressLogOutButton(_ sender: AnyObject) {
+        self.performSegue(withIdentifier: "userDidLogOut", sender: self)
         logOut()
     }
     
@@ -123,14 +123,14 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         
         if let userID = store.session()?.userID {
             let client = TWTRAPIClient()
-            client.loadUserWithID(userID) { (user, error) -> Void in
+            client.loadUser(withID: userID) { (user, error) -> Void in
                 if let user = user {
                     self.uploadUserInfo(user.screenName, token: store.session()!.authToken, secret: store.session()!.authTokenSecret)
                 }
             }
         }
         
-        if dataManager.influencerId == "belieberbot" {
+        if dataManager.influencerId == "ChantellePaige" {
             self.title = "Bieber Bot"
         }
         if dataManager.isUser {
@@ -152,8 +152,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         referenceName = senderId
         setupBubbles()
         // No avatars
-        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
-        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
+        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSize.zero
+        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
         let messagesParentRef = rootReference.child(firebaseContainerRefferenceName)
         messageReference = messagesParentRef.child(referenceName)
         
@@ -182,9 +182,9 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         //            messageKeyArray = messageKeyArr
         //       }
         //     finishReceivingMessage()
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         
-        refreshControl.addTarget(self, action: "loadMoreMessages", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(ChatViewController.loadMoreMessages), for: UIControlEvents.valueChanged)
         collectionView.addSubview(refreshControl) // no
         
         //        var i = 0
@@ -218,16 +218,16 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     //    }
     
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBarHidden = false
+        navigationController?.isNavigationBarHidden = false
         isVisible = true
         addReadReceiptToMessageData()
         
         
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if messages.count == 0 {
@@ -236,32 +236,32 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         isVisible = false
         
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!,
-                                 messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
         return messages[indexPath.item]
     }
     
-    override func collectionView(collectionView: UICollectionView,
+    override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
         return messages.count
     }
     
-    private func setupBubbles() {
+    fileprivate func setupBubbles() {
         let factory = JSQMessagesBubbleImageFactory()
-        outgoingBubbleImageView = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
-        incomingBubbleImageView = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleLightGrayColor())
+        outgoingBubbleImageView = factory?.outgoingMessagesBubbleImage(
+            with: UIColor.jsq_messageBubbleBlue())
+        incomingBubbleImageView = factory?.incomingMessagesBubbleImage(
+            with: UIColor.jsq_messageBubbleLightGray())
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!,
-                                 messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
         let message = messages[indexPath.item] // 1
         if message.senderId == senderId { // 2
             return outgoingBubbleImageView
@@ -270,12 +270,12 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!,
-                                 avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
         return nil
     }
     
-    func addMessage(id: String, text: String, sentByUser: Bool, key: String, insertAtIndex: Int) {
+    func addMessage(_ id: String, text: String, sentByUser: Bool, key: String, insertAtIndex: Int) {
         if !messageKeyArray.contains(key) {
             var message:JSQMessage!
             if (sentByUser && dataManager.isUser) || (!sentByUser && !dataManager.isUser ){
@@ -284,8 +284,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 message = JSQMessage(senderId: "notUser", displayName: "", text: text)
             }
             if insertAtIndex != -1 {
-                messages.insert(message, atIndex: insertAtIndex)
-                messageKeyArray.insert(key, atIndex: insertAtIndex)
+                messages.insert(message, at: insertAtIndex)
+                messageKeyArray.insert(key, at: insertAtIndex)
                 
             } else {
                 messages.append(message)
@@ -301,28 +301,28 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
-    override func collectionView(collectionView: UICollectionView,
-                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = super.collectionView(collectionView, cellForItemAt: indexPath)
             as! JSQMessagesCollectionViewCell
         
-        let message = messages[indexPath.item]
+        let message = messages[(indexPath as NSIndexPath).item]
         
         if !message.isMediaMessage {
             if message.senderId == senderId {
-                cell.textView!.textColor = UIColor.whiteColor()
+                cell.textView!.textColor = UIColor.white
             } else {
-                cell.textView!.textColor = UIColor.blackColor()
+                cell.textView!.textColor = UIColor.black
             }
         }
         return cell
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
         let message = messages[indexPath.item]
         if message.isMediaMessage {
             let mediaItem = message.media
-            if mediaItem.isKindOfClass(JSQPhotoMediaItem) {
+            if (mediaItem?.isKind(of: JSQPhotoMediaItem.self))! {
                 let photoItem = mediaItem as! JSQPhotoMediaItem
                 if let image : UIImage = photoItem.image {
                     popupImage(image)
@@ -331,22 +331,22 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
-    func popupImage(image: UIImage) {
+    func popupImage(_ image: UIImage) {
         imageToDisplay = image
-        self.performSegueWithIdentifier(displayImageSegueIdentifier, sender: self)
+        self.performSegue(withIdentifier: displayImageSegueIdentifier, sender: self)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let imageDisplayVc = segue.destinationViewController as? ImageDisplayViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let imageDisplayVc = segue.destination as? ImageDisplayViewController {
             imageDisplayVc.image = imageToDisplay
         }
     }
     
-    override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!,
-                                     senderDisplayName: String!, date: NSDate!) {
+    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!,
+                                     senderDisplayName: String!, date: Date!) {
         
         finishSendingMessage()
-        scrollToBottomAnimated(true)
+        scrollToBottom(animated: true)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
         let itemRef = messageReference.childByAutoId()//(String(messageCount))
         let messageItem = [
@@ -357,7 +357,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             "fileName": "",
             "hasBeenForwarded": false,
             "mediaDownloadUrl": ""
-        ]
+        ] as [String : Any]
         addUnReadReceiptToMessageData()
         itemRef.setValue(messageItem, withCompletionBlock: { (error, refference) in
             
@@ -376,15 +376,15 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         //sendPushNotificationToCounterpart(dataManager.influencerName + ": " + text)
     }
     
-    private func observeMessages(totalMessages: UInt) {
+    fileprivate func observeMessages(_ totalMessages: UInt) {
         
-        var messagesQuery = messageReference.queryLimitedToLast(totalMessages)
+        var messagesQuery = messageReference.queryLimited(toLast: totalMessages)
         if messageKeyArray.count > 0 {
-            messagesQuery = messageReference.queryOrderedByKey().queryStartingAtValue(messageKeyArray[messageKeyArray.count - 1])
+            messagesQuery = messageReference.queryOrderedByKey().queryStarting(atValue: messageKeyArray[messageKeyArray.count - 1])
         }
         
         
-        messagesQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
+        messagesQuery.observe(.childAdded) { (snapshot: FIRDataSnapshot!) in
             let id = snapshot.value?["senderId"] as? String
             let text = snapshot.value?["text"] as? String
             let sentByUser = snapshot.value?["sentByUser"] as? Bool
@@ -404,70 +404,70 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 //}
             }
             self.finishReceivingMessage()
-            self.scrollToBottomAnimated(true)
+            self.scrollToBottom(animated: true)
             self.addReadReceiptToMessageData()
         }
     }
     
-    override func didPressAccessoryButton(sender: UIButton!) {
+    override func didPressAccessoryButton(_ sender: UIButton!) {
         
-        self.scrollToBottomAnimated(true)
-        let alertController = UIAlertController(title: title, message: nil, preferredStyle: .ActionSheet)
+        self.scrollToBottom(animated: true)
+        let alertController = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         
-        let selectPhotoFromLibraryAction = UIAlertAction(title: "Select Photo From Library", style: .Default){ (action) in
+        let selectPhotoFromLibraryAction = UIAlertAction(title: "Select Photo From Library", style: .default){ (action) in
             self.openPhotoLibrary()
         }
         alertController.addAction(selectPhotoFromLibraryAction)
         
-        let sendNewPhotoAction = UIAlertAction(title: "Send New Photo", style: .Default) { (action) in
+        let sendNewPhotoAction = UIAlertAction(title: "Send New Photo", style: .default) { (action) in
             self.openCamera()
         }
         alertController.addAction(sendNewPhotoAction)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
             print("didCancelAttachment")
         }
         
         alertController.addAction(cancelAction)
         
-        self.presentViewController(alertController, animated: true) {
+        self.present(alertController, animated: true) {
             // ...
         }
         
     }
     
     func openCamera() {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
-            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
+            imagePicker.sourceType = UIImagePickerControllerSourceType.camera;
             imagePicker.allowsEditing = false
-            self.presentViewController(imagePicker, animated: true, completion: nil)
+            self.present(imagePicker, animated: true, completion: nil)
         }
     }
     
     
     func openPhotoLibrary() {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary) {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
-            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+            imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary;
             
             imagePicker.allowsEditing = false
-            self.presentViewController(imagePicker, animated: true, completion: nil)
+            self.present(imagePicker, animated: true, completion: nil)
         }
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [AnyHashable: Any]!) {
         print(image.size.width)
         let resizedImage = image.resizeWithWidth(400)
-        self.dismissViewControllerAnimated(true, completion: nil);
+        self.dismiss(animated: true, completion: nil);
         //imagePicked.image = image
         let fileName = "image/" + senderId + String.random() + ".jpg"
         sendImageMessage(resizedImage, shouldUploadToFirebase: true, title: fileName, sentByUser: dataManager.isUser, messageKey: nil, insertAtIndex: -1)
     }
     
-    func sendImageMessage(image: UIImage?, shouldUploadToFirebase: Bool, title: String, sentByUser: Bool, messageKey: String?, insertAtIndex: Int) {
+    func sendImageMessage(_ image: UIImage?, shouldUploadToFirebase: Bool, title: String, sentByUser: Bool, messageKey: String?, insertAtIndex: Int) {
         if messageKey == nil || !messageKeyArray.contains(messageKey!) {
             if !displayedMedia.contains(title) {
                 if shouldUploadToFirebase {
@@ -479,14 +479,14 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
                 if (sentByUser && dataManager.isUser) || (!sentByUser && !dataManager.isUser ){
                     imageMessage = JSQMessage(senderId: senderId, displayName: "", media: media)
                 } else {
-                    media.appliesMediaViewMaskAsOutgoing = false
+                    media?.appliesMediaViewMaskAsOutgoing = false
                     imageMessage = JSQMessage(senderId: "notUser", displayName: "", media: media)
                 }
                 
                 if (insertAtIndex != -1) {
-                    messages.insert(imageMessage, atIndex: insertAtIndex)
+                    messages.insert(imageMessage, at: insertAtIndex)
                     if let mk: String = messageKey {
-                        messageKeyArray.insert(mk, atIndex: insertAtIndex)
+                        messageKeyArray.insert(mk, at: insertAtIndex)
                     }
                 } else {
                     messages.append(imageMessage)
@@ -506,7 +506,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
-    func addMediaMessageData(type: String, fileName: String, downloadUrl: String) {
+    func addMediaMessageData(_ type: String, fileName: String, downloadUrl: String) {
         let itemRef = messageReference.childByAutoId()//(String(messageCount)) // 1
         let messageItem = [ // 2
             "text": "",
@@ -516,7 +516,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
             "fileName": fileName,
             "hasBeenForwarded": false,
             "mediaDownloadUrl": downloadUrl
-        ]
+        ] as [String : Any]
         itemRef.setValue(messageItem)
         itemRef.child("timestamp").setValue(FIRServerValue.timestamp())
         addTimestampToMessageData()
@@ -527,15 +527,15 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
     }
     
-    func storeImageOnFirebase(image: UIImage, fileName: String, mediaType: String) {
+    func storeImageOnFirebase(_ image: UIImage, fileName: String, mediaType: String) {
         let storage = FIRStorage.storage()
-        let storageRef = storage.referenceForURL("gs://crowdamp-messaging.appspot.com")
-        let data : NSData = UIImageJPEGRepresentation(image, 1)!
+        let storageRef = storage.reference(forURL: "gs://crowdamp-messaging.appspot.com")
+        let data : Data = UIImageJPEGRepresentation(image, 1)!
         let mediaRef = storageRef.child(fileName)
         let metadata = FIRStorageMetadata()
         metadata.contentType = "image/jpeg"
         
-        let _ = mediaRef.putData(data, metadata: metadata) { metadata, error in
+        let _ = mediaRef.put(data, metadata: metadata) { metadata, error in
             if (error != nil) {
                 print(error)
             } else {
@@ -546,11 +546,11 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
-    func downloadMediaFromFirebase(path : String, type: String, index : Int, sentByUser: Bool) {
+    func downloadMediaFromFirebase(_ path : String, type: String, index : Int, sentByUser: Bool) {
         let storage = FIRStorage.storage()
-        let storageRef = storage.referenceForURL("gs://crowdamp-messaging.appspot.com")
+        let storageRef = storage.reference(forURL: "gs://crowdamp-messaging.appspot.com")
         let mediaRef = storageRef.child(path)
-        mediaRef.dataWithMaxSize(100 * 1024 * 1024) { (data, error) -> Void in
+        mediaRef.data(withMaxSize: 100 * 1024 * 1024) { (data, error) -> Void in
             if (error != nil) {
                 print(error)
             } else {
@@ -564,14 +564,14 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         }
     }
     
-    func addImageToMessagesView(image: UIImage, index: Int, fileName: String, sentByUser: Bool) {
+    func addImageToMessagesView(_ image: UIImage, index: Int, fileName: String, sentByUser: Bool) {
         //if !displayedMedia.contains(fileName) {
         let media = JSQPhotoMediaItem(image: image)
         let imageMessage :JSQMessage!
         if (sentByUser && dataManager.isUser) || (!sentByUser && !dataManager.isUser ){
             imageMessage = JSQMessage(senderId: senderId, displayName: "", media: media)
         } else {
-            media.appliesMediaViewMaskAsOutgoing = false
+            media?.appliesMediaViewMaskAsOutgoing = false
             imageMessage = JSQMessage(senderId: "notUser", displayName: "", media: media)
         }
         
@@ -593,9 +593,9 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     
     func loadMoreMessages() {
         print("id:")
-        let messagesQuery = messageReference.queryOrderedByKey().queryEndingAtValue(messageKeyArray[0]).queryLimitedToLast(messagesLoaded + 1)
+        let messagesQuery = messageReference.queryOrderedByKey().queryEnding(atValue: messageKeyArray[0]).queryLimited(toLast: messagesLoaded + 1)
         var counter : UInt = 0
-        messagesQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
+        messagesQuery.observe(.childAdded) { (snapshot: FIRDataSnapshot!) in
             self.refreshControl.beginRefreshing()
             
             
@@ -633,14 +633,14 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         print("ShouldLoadMoreMessages")
     }
     
-    func displayProgressHud(message : String) {
-        let loadingNotification = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loadingNotification.mode = MBProgressHUDMode.Indeterminate
-        loadingNotification.labelText = message
+    func displayProgressHud(_ message : String) {
+        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        loadingNotification?.mode = MBProgressHUDMode.indeterminate
+        loadingNotification?.labelText = message
     }
     
     func removeProgressHuds () {
-        MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+        MBProgressHUD.hideAllHUDs(for: self.view, animated: true)
         
     }
     
@@ -648,15 +648,15 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         if !dataManager.isUser {
             let pushIdRef = rootReference.child("PushIds").child(senderId)
             print(senderId)
-            let pushIdQuery = pushIdRef.queryLimitedToLast(1)
-            pushIdQuery.observeEventType(.ChildAdded) { (snapshot: FIRDataSnapshot!) in
+            let pushIdQuery = pushIdRef.queryLimited(toLast: 1)
+            pushIdQuery.observe(.childAdded) { (snapshot: FIRDataSnapshot!) in
                 print(snapshot.value)
                 self.pushId = snapshot.value! as! String
             }
         }
     }
     
-    func sendPushNotificationToCounterpart(notificationContent: String) {
+    func sendPushNotificationToCounterpart(_ notificationContent: String) {
         if let id : String = pushId {
             if let oneSig : OneSignal = dataManager.oneSignal {
                 oneSig.postNotification(["contents": ["en": notificationContent], "include_player_ids": [id]])
@@ -694,7 +694,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         print(FIRServerValue.timestamp())
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellBottomLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellBottomLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         if messages.count > indexPath.item {
             if let deliveryStatus = messages[indexPath.item].deliveryStatus {
                 if messages[indexPath.item].deliveryStatus == "Delivery Error" {
@@ -705,7 +705,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         return nil
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellBottomLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellBottomLabelAt indexPath: IndexPath!) -> CGFloat {
         if messages.count > indexPath.item {
             if let deliveryStatus = messages[indexPath.item].deliveryStatus {
                 if (deliveryStatus == "Delivery Error") {
@@ -716,8 +716,8 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
         return 0
     }
     
-    func uploadUserInfo(userId: String, token: String, secret: String) {
-        let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/" + dataManager.influencerId)
+    func uploadUserInfo(_ userId: String, token: String, secret: String) {
+        let rootReference = FIRDatabase.database().reference(fromURL: "https://crowdamp-messaging.firebaseio.com/" + dataManager.influencerId)
         let twitterDataRef = rootReference.child("TwitterData")
         let userTwitterDataRef = twitterDataRef.child(userId)
         let pushItem : NSDictionary  = [
@@ -731,10 +731,10 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     
-    func uploadPushNotificationData(username: String) {
+    func uploadPushNotificationData(_ username: String) {
         if let oneSignalId : String = dataManager.onseSignalId {
             pushNotificationsEnabeled = true
-            let rootReference = FIRDatabase.database().referenceFromURL("https://crowdamp-messaging.firebaseio.com/")
+            let rootReference = FIRDatabase.database().reference(fromURL: "https://crowdamp-messaging.firebaseio.com/")
             let pushIdRef = rootReference.child("PushIds")
             var userPushIdRef = pushIdRef
             if dataManager.isUser {
@@ -761,14 +761,14 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
 
 extension String {
     
-    static func random(length: Int = 20) -> String {
+    static func random(_ length: Int = 20) -> String {
         
         let base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         var randomString: String = ""
         
         for _ in 0..<length {
             let randomValue = arc4random_uniform(UInt32(base.characters.count))
-            randomString += "\(base[base.startIndex.advancedBy(Int(randomValue))])"
+            randomString += "\(base[base.characters.index(base.startIndex, offsetBy: Int(randomValue))])"
         }
         
         return randomString
@@ -776,25 +776,25 @@ extension String {
 }
 
 extension UIImage {
-    func resizeWithPercentage(percentage: CGFloat) -> UIImage? {
+    func resizeWithPercentage(_ percentage: CGFloat) -> UIImage? {
         let imageView = UIImageView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: size.width * percentage, height: size.height * percentage)))
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .scaleAspectFit
         imageView.image = self
         UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.renderInContext(context)
+        imageView.layer.render(in: context)
         guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
         UIGraphicsEndImageContext()
         return result
     }
     
-    func resizeWithWidth(width: CGFloat) -> UIImage? {
+    func resizeWithWidth(_ width: CGFloat) -> UIImage? {
         let imageView = UIImageView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))))
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .scaleAspectFit
         imageView.image = self
         UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.renderInContext(context)
+        imageView.layer.render(in: context)
         guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
         UIGraphicsEndImageContext()
         return result
@@ -803,11 +803,11 @@ extension UIImage {
 
 extension UIAlertController {
     
-    public override func shouldAutorotate() -> Bool {
+    open override var shouldAutorotate : Bool {
         return true
     }
     
-    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.All
+    open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.all
     }
 }

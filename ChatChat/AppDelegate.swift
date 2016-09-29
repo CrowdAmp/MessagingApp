@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     let dm = DataManager.sharedInstance
-    let defaults = NSUserDefaults()
+    let defaults = UserDefaults()
     
     
     override init() {
@@ -44,38 +44,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         Appsee.start("129760c880774834b9cd9b769dc35f7c")
         Fabric.with([Twitter.self, Crashlytics.self])
         FIRApp.configure()
         FIRDatabase.database().persistenceEnabled = true
-        FIRMessaging.messaging().connectWithCompletion { (error) in
+        FIRMessaging.messaging().connect { (error) in
             if (error != nil) {
                 print("Unable to connect with FCM. \(error)")
             } else {
                 print("Connected to FCM.")
             }
         }
-        dm.launchOptions = launchOptions
+        dm.launchOptions = launchOptions as [NSObject : AnyObject]?
         
         //set initial VC if logged in
         
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        self.window = UIWindow(frame: UIScreen.main.bounds)
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        if ((Twitter.sharedInstance().sessionStore.session()?.userID) != nil && (!dm.isUser && (defaults.objectForKey("influencerId") != nil) || (dm.isUser && defaults.objectForKey("userId") != nil))) {
+        if ((Twitter.sharedInstance().sessionStore.session()?.userID) != nil && (!dm.isUser && (defaults.object(forKey: "influencerId") != nil) || (dm.isUser && defaults.object(forKey: "userId") != nil))) {
             if dm.isUser {
-                dm.userId = defaults.objectForKey("userId") as! String
-                let initialVC: UINavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForUser") as! UINavigationController
+                dm.userId = defaults.object(forKey: "userId") as! String
+                let initialVC: UINavigationController = mainStoryboard.instantiateViewController(withIdentifier: "initialVCForUser") as! UINavigationController
                 self.window?.rootViewController = initialVC
                 
             } else {
-                dm.influencerId = "belieberbot"//defaults.objectForKey("influencerId") as! String
-                let initialVC: UINavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForInfluencer") as! UINavigationController
+                dm.influencerId = "morggkatherinee"//defaults.objectForKey("influencerId") as! String
+                let initialVC: UINavigationController = mainStoryboard.instantiateViewController(withIdentifier: "initialVCForInfluencer") as! UINavigationController
                 self.window?.rootViewController = initialVC
             }
         } else {
-            let initialVC: LoginViewController = mainStoryboard.instantiateViewControllerWithIdentifier("initialVCForNewUser") as! LoginViewController
+            let initialVC: LoginViewController = mainStoryboard.instantiateViewController(withIdentifier: "initialVCForNewUser") as! LoginViewController
             self.window?.rootViewController = initialVC
             
         }
@@ -86,25 +86,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("didRegister")
     }
     
     
-    func application(application: UIApplication,  notificationSettings: UIUserNotificationSettings) {
+    func application(_ application: UIApplication,  notificationSettings: UIUserNotificationSettings) {
         print("Hooray! I'm registered!")
-        FIRMessaging.messaging().subscribeToTopic("/topics/test")
+        FIRMessaging.messaging().subscribe(toTopic: "/topics/test")
     }
     
-    func applicationDidEnterBackground(application: UIApplication) {
-        func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        func applicationDidEnterBackground(_ application: UIApplication) {
             FIRMessaging.messaging().disconnect()
             print("Disconnected from FCM.")
         }
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject],
-                     fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
         // TODO: Handle data of notification
@@ -117,12 +117,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("%@", userInfo)
     }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
     }
     
     
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         FBSDKAppEvents.activateApp()
     }
     
